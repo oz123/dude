@@ -1,0 +1,17 @@
+DUDE is my am to make a FOSS Deskop Environment usable and easy.
+It is a collection of ideas and scripts which I maintain on my few laptops
+and Desktops.
+
+These scripts correspond to my own personal taste of how things should work.
+They are by no means the only way it should work. There is always a better
+way. But KDE4 and GNOME 3 are not one of these ways. 
+
+These ideas are meant for people who use computers as in their classical 
+sense. Screen, keyboard and probably a chair for working on them. 
+
+In the mean while DUDE is meant to work with Mate Desktop Environment, maybein the future I will make it work with some more geeky WM manager. 
+
+DUDE also contains my own directory of dot files, because I'm too lazy to 
+reconfigure my tmux, vim, vlc and other applications on each computer.
+
+
