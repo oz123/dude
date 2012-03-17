@@ -1,0 +1,21 @@
+This directory contains some configurations files to software that I use.
+
+* dwm.config.h - configuration file to DWM[1], contains
+  mainly two nice things:
+  MOD Key is the Super_L key (the one with that Other OS symbol on it).
+  Some nice keyboard shortcuts to switch keyboard layouts (currently between
+  English, German and Hebrew - but you can change it ofcourse).
+  Changing keys is done in multiple ways.
+
+
+
+
+
+
+
+
+
+
+
+
+[1] dwm.suckless.org
