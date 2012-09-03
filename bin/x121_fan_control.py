@@ -22,13 +22,17 @@
 #  MA 02110-1301, USA.
 #  
 """
+# http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
+# http://motoma.io/daemonizing-a-python-script/
+# https://github.com/kasun/YapDi
 
 import re
-import ConfigParser,sys
+import sys
 import os
 import argparse
 import time
 import subprocess as sp
+import signal
 
 # max allowed temp: level 
 MAXTEMP_LEVEL = {53:0, 60:1, 64:2, 70:5, 75:7}
@@ -78,7 +82,6 @@ def best_fan_level(clevel,ctemp):
     #print "sent ", MAXTEMP_LEVEL[nearest_temp]
     return MAXTEMP_LEVEL[nearest_temp]
 
-            
 def set_level(new_level):
     """
     set fan to new level
@@ -113,18 +116,12 @@ def loop_sleep(args):
     fanlevel, cpu_temp = poll()
     if fanlevel == 'auto':
         fanlevel = 0
-                
-    continue_polling = True
-    while continue_polling:
-        newlevel=best_fan_level(int(fanlevel), int(cpu_temp))
-        set_level(newlevel)
-        
-        fanlevel, cpu_temp = poll()
-        if fanlevel == 'auto':
-            fanlevel = 0
-        time.sleep(5)
             
-
+    newlevel=best_fan_level(int(fanlevel), int(cpu_temp))
+    set_level(newlevel)
+            
+    time.sleep(5)
+             
 def main():
     if not os.getuid() == 0:
         print "You must be root to change fan speed."
@@ -133,17 +130,34 @@ def main():
     parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser(description='Control the Fan of Lenovo \
     thinkpad x121e')
-    parser.add_argument('--poll',help='Poll the tempratures, do nothing \
+    parser.add_argument('-p','--poll',help='Poll the tempratures, do nothing \
     real', action="store_true")
+    parser.add_argument('-d','--damon', help='Fork and go to backgroud', 
+    action="store_true")
     
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)
+    
+    
     args=parser.parse_args()
+    pidfile = '/var/run/'+sys.argv[0]+'.pid'
+    pid = str(os.getpid())
+    print pid
+    file(pidfile,'w+').write("%s\n" % pid)
     
     if args.poll:
         print "polling turned on"
-        loop_sleep(args)
+        continue_polling = True
+        while continue_polling:
+            try:
+                loop_sleep(args)
+            except KeyboardInterrupt:
+                os.remove(pidfile)
+                sys.exit(0)
+                 
+    if args.daemon:
+       print "will daemon"    
         
 if __name__ == '__main__':
     main()
