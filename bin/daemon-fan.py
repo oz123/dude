@@ -39,6 +39,10 @@ import kmod
 
 #cat /proc/modules | cut -f 1 -d " " | while read module; do  echo "Module: $module";  if [ -d "/sys/module/$module/parameters" ]; then   ls /sys/module/$module/parameters/ | while read parameter; do    echo -n "Parameter: $parameter --> ";    cat /sys/module/$module/parameters/$parameter;   done;  fi;  echo; done
 
+# below 63 fan level is set to 0
+# below 68 fan level is set to 1
+# MAXTEMP_LEVEL = {63:0, 68:1, 69:2, 70:5, 75:7}
+# the key is the maximum temperature allowed for fan level (value)
 # max allowed temp: level 
 # this configuration is pretty much usable without recharger!
 # when charging the battery, the avg. temperature increases to 
@@ -50,7 +54,8 @@ import kmod
 BASE_POLL_TIME_INTERVAL = 5
 TEMP_SENSOR = "/proc/acpi/ibm/thermal"
 FAN_INFO = "/proc/acpi/ibm/fan"
-MAXTEMP_LEVEL = {66:0, 68:1, 69:2, 70:5, 75:7}
+# below 63
+MAXTEMP_LEVEL = {64:0, 66:1, 69:2, 70:5, 75:7}
 
 class FanControlDaemon(Daemon):
     """
@@ -72,13 +77,13 @@ class FanControlDaemon(Daemon):
         #new_fan_level = 'auto'
         #print "!c_fan_lavel: %s, new_fan_level %s, ctemp %d, ntemp %d " % (c_fan_level, new_fan_level, ctemp, nearest_temp) 
 
-        if ctemp < nearest_temp and c_fan_level <= allowed_fan_level:
+        if ctemp <= nearest_temp and c_fan_level <= allowed_fan_level:
             print "T: %d L: %d  Tnear: %d Levelnear: %d, fan safe" % (ctemp, 
             c_fan_level, nearest_temp, allowed_fan_level)
             new_fan_level = c_fan_level
             print "new_fan_level modified in cond 1"
             
-        if ctemp >= nearest_temp:
+        if ctemp > nearest_temp:
             new_fan_level = allowed_fan_level+1
             print "new_fan_level modified in cond 2 ", new_fan_level
             if new_fan_level > c_fan_level:
@@ -95,7 +100,8 @@ class FanControlDaemon(Daemon):
             print "T1: %d L: %d  Tnear: %d Levelnear: %d, New Level %d, fan decreased" % (ctemp, 
             c_fan_level, nearest_temp, allowed_fan_level, new_fan_level)
          
-        print "c_fan_lavel: %s, new_fan_level %s, ctemp %d, ntemp %d " % (c_fan_level, new_fan_level, ctemp, nearest_temp) 
+        print "c_fan_lavel: %s, new_fan_level %s, ctemp %d, ntemp %d " % ( 
+        c_fan_level, new_fan_level, ctemp, nearest_temp) 
         print '****'
         return new_fan_level
         
