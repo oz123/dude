@@ -40,11 +40,17 @@ import kmod
 #cat /proc/modules | cut -f 1 -d " " | while read module; do  echo "Module: $module";  if [ -d "/sys/module/$module/parameters" ]; then   ls /sys/module/$module/parameters/ | while read parameter; do    echo -n "Parameter: $parameter --> ";    cat /sys/module/$module/parameters/$parameter;   done;  fi;  echo; done
 
 # max allowed temp: level 
-MAXTEMP_LEVEL = {53:0, 68:1, 69:2, 70:5, 75:7}
+# this configuration is pretty much usable without recharger!
+# when charging the battery, the avg. temperature increases to 
+# 69 degrees
+# avg. temp. when laptop is idle (no cpu usage) is about 63.5
+# celsius degrees
 
-BASE_POLL_TIME_INTERVAL = 10
+
+BASE_POLL_TIME_INTERVAL = 5
 TEMP_SENSOR = "/proc/acpi/ibm/thermal"
 FAN_INFO = "/proc/acpi/ibm/fan"
+MAXTEMP_LEVEL = {66:0, 68:1, 69:2, 70:5, 75:7}
 
 class FanControlDaemon(Daemon):
     """
@@ -62,24 +68,36 @@ class FanControlDaemon(Daemon):
         """
         nearest_temp = min(MAXTEMP_LEVEL.keys(), key=lambda k: abs(k-ctemp))
         allowed_fan_level = MAXTEMP_LEVEL[nearest_temp]
-        if ctemp >= nearest_temp and c_fan_level <= allowed_fan_level:
-            print "T: %d L: %d  Tnear: %d Levelnear: %d, fan increased" % (ctemp, 
-            c_fan_level, nearest_temp, allowed_fan_level)
-            return allowed_fan_level
-        if ctemp <= nearest_temp and c_fan_level > allowed_fan_level:
-            print "T: %d L: %d  Tnear: %d Levelnear: %d, fan decreased" % (ctemp, 
-            c_fan_level, nearest_temp, allowed_fan_level)
-            return allowed_fan_level
-        elif ctemp <= nearest_temp and c_fan_level == allowed_fan_level:
+        print "allowed ", allowed_fan_level
+        #new_fan_level = 'auto'
+        #print "!c_fan_lavel: %s, new_fan_level %s, ctemp %d, ntemp %d " % (c_fan_level, new_fan_level, ctemp, nearest_temp) 
+
+        if ctemp < nearest_temp and c_fan_level <= allowed_fan_level:
             print "T: %d L: %d  Tnear: %d Levelnear: %d, fan safe" % (ctemp, 
             c_fan_level, nearest_temp, allowed_fan_level)
-            return allowed_fan_level
-        #elif ctemp >= nearest_temp and c_fan_level == allowed_fan_level:
-        #    print "T: %d L: %d  Tnear: %d Levelnear: %d, fan safe*" % (ctemp, 
-        #    c_fan_level, nearest_temp, allowed_fan_level)
-        #    return allowed_fan_level
-        print "whopps ", ctemp, c_fan_level
-        
+            new_fan_level = c_fan_level
+            print "new_fan_level modified in cond 1"
+            
+        if ctemp >= nearest_temp:
+            new_fan_level = allowed_fan_level+1
+            print "new_fan_level modified in cond 2 ", new_fan_level
+            if new_fan_level > c_fan_level:
+                print "T: %d L: %d  Tnear: %d Levelnear: %d, New Level %d, fan increased" % (ctemp, 
+            c_fan_level, nearest_temp, allowed_fan_level, new_fan_level)
+            
+            elif new_fan_level == c_fan_level:
+                print "T: %d L: %d  Tnear: %d Levelnear: %d, fan safe*" % (ctemp, 
+                c_fan_level, nearest_temp, allowed_fan_level)
+    
+        elif  c_fan_level > allowed_fan_level:
+            new_fan_level = allowed_fan_level
+            print "new_fan_level modified in cond 3 ", new_fan_level
+            print "T1: %d L: %d  Tnear: %d Levelnear: %d, New Level %d, fan decreased" % (ctemp, 
+            c_fan_level, nearest_temp, allowed_fan_level, new_fan_level)
+         
+        print "c_fan_lavel: %s, new_fan_level %s, ctemp %d, ntemp %d " % (c_fan_level, new_fan_level, ctemp, nearest_temp) 
+        print '****'
+        return new_fan_level
         
     def poll(self):
         """
