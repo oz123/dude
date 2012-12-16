@@ -2,7 +2,6 @@
 
 # -*- coding: utf-8 -*-
 """ 
-   
    x121_fan_control.py 
 
 #  Copyright 2012 Oz N <nahumoz__AT_NONONO_SPAMHERE g m a i l dot com>
@@ -131,18 +130,26 @@ class FanControlDaemon(Daemon):
             pf.close()
         except IOError:
             pid = None
+            return None
         if pid:
+            return pid
+    
+    def exit_running(self):
+        """
+        do not start if already running
+        """
+        running = self.check_proc()
+        if running:
             message = "pidfile %s already exists. Daemon already running?\n"
             message += "check if process %d still exists\n"
-            sys.stderr.write(message % (self.pidfile, pid))
+            sys.stderr.write(message % (self.pidfile, running))
             sys.exit(1)
-        
+    
     def start(self):
         """
         Start in forground
         """
-        # Check for a pidfile to see if the daemon already runs
-        self.check_proc()
+        self.exit_running()
         pid = str(os.getpid())
         print "[pid: %s]" % pid   
         open(self.pidfile,'w+').write("%s\n" % pid)
@@ -153,7 +160,7 @@ class FanControlDaemon(Daemon):
         Start the daemon
         """
         # Check for a pidfile to see if the daemon already runs
-        self.check_proc()
+        self.exit_running()
         # Start the daemon
         pid = str(os.getpid())
         open(self.pidfile,'w+').write("%s\n" % pid)
@@ -254,18 +261,27 @@ Would you like to fix it now [Y/n]?
     #if cfg.readline().strip() != "Y":
         #raise EnvironmentError("misconfigured")
 
+# todo: check config before running
+
 if __name__ == "__main__":
     daemon = FanControlDaemon('/var/run/thinkpadfan.pid')
     if not os.getuid() == 0:
         print "You must be root to change fan speed."
         sys.exit(2)
-        
-    parser = argparse.ArgumentParser(description='Control the Fan of Lenovo \
-    thinkpad x121e.',usage='%(prog)s start|stop|restart [-p|-d]')
+    
+    parser = argparse.ArgumentParser(
+    description="Control the Fan of Lenovo Thinkpad x121e.",
+    usage='%(prog)s start|stop|restart|status [-p|-d]\n',
+    )
     parser.add_argument('-p','--poll',help='Poll the tempratures, do nothing \
     real', action="store_true")
     parser.add_argument('-D','--NoDaemon', help='Do not fork, start in foreground', 
     action="store_true", default=False)
+
+    ext_usage="""\n%s start - starts the fan control.
+%s stop - stops the fan control, sets control mode to 'auto'.
+%s status - check if the process is already running. 
+""" % (parser.prog, parser.prog, parser.prog)
 
     if len(sys.argv) == 1:
         parser.print_help()
@@ -273,14 +289,17 @@ if __name__ == "__main__":
     
     action = sys.argv[1]
     
-    if not 'start' == action and not 'stop' == action and not 'restart' == action:
+    if not 'start' == action and not 'stop' == action and not 'restart' == action \
+        and not 'status' == action:
         parser.print_help()
+        print ext_usage
         sys.exit(1)
-
     sys.argv = sys.argv[1:]
-    #print sys.argv
     args = parser.parse_args()
-    
+    if action == 'status':
+        running = daemon.check_proc()
+        if running:
+            print "%s already runs with pid: %d" % (parser.prog, running)
     if action == 'start' and args.NoDaemon:
         try:
             daemon.start()
