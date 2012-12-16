@@ -164,6 +164,32 @@ class FanControlDaemon(Daemon):
         self.stop()
         self.startd()
 
+
+def load_module(module_name):
+    """
+    wrap around modprobe -i module_name
+    """
+    cmd = "modprobe -i %s" % module_name
+    modprobe = sp.Popen(cmd, shell=True)
+    stat = modprobe.poll()
+    if stat != 0:
+        print "could not load module %s" % module_name
+        sys.exit(2)
+
+def module_cfg(mname,syscfgfile, param)
+    """
+    check in /sys/module that the module was loaded with the correct
+    parameters.
+    e.g.
+    /sys/module/thinkpad_acpi/parameters/fan_control # -> 
+    should point to "Y"!
+    """
+    cfg = open(syscfgfile)   
+    if cfg.readline().strip() != param:
+        print "warning: %s is misconfigured ..." % mname
+        return 1
+    return 0
+
 def check_config():
     """
     this function checks that we can change the fan speed
@@ -175,18 +201,43 @@ def check_config():
     print "not yet implemented"
     # first that we have the modules loades
     loaded_modules = [ m.name for m in km.loaded() ]
-    if u"thinkpad_acpi" in [ m.name for m in km.loaded()]:
-        # module is loaded!
-        # is it loaded with the right parameters?
-        #/sys/module/thinkpad_acpi/parameters/fan_control # -> 
-        # should point to "Y"!
-        cfg = open("/sys/module/thinkpad_acpi/parameters/fan_control")   
-        if cfg.readline().strip() != "Y":
-            raise EnvironmentError("misconfigured")
-            sys.exit(2)
-    if u"coretemp" not in [ m.name for m in km.loaded()]:
+    if u"thinkpad_acpi" not in loaded_modules:
+        load_module("thinkpad_acpi")
+        cfgval = module_cfg("thinkpad_acpi",
+        "/sys/module/thinkpad_acpi/parameters/fan_control", 'Y')
+        if cfgval != 0:
+            print "You should configure thinkpad_acpi with fan_control=1."
+            print """
+edit /etc/modprobe.d/thinkfan.conf to contain: 
+options thinkpad_acpi fan_control=1 
+Would you like to fix it now [Y/n]?
+"""
+        ans = raw_input()
+                if ans.lower() == 'y':
+            #km.modprobe is broken
+            load_module("coretemp")
+        else:
+            print "Refusing to continue... this could harm your computer..."
+            print "You should really load thinkpad_acpi to run this script" 
+            
+            
+    if u"coretemp" not in loaded_modules:
         # module is not loaded!   
-        raise EnvironmentError("Module 'coretemp is not loaded'")
+        #raise EnvironmentError("Module 'coretemp is not loaded'")
+        ans = 'Y'
+        ans = raw_input("Module 'coretemp is not loaded', would you ", 
+        "like to load it [Y/n] ?")
+        if ans.lower() == 'y':
+            #km.modprobe is broken
+            load_module("coretemp")
+        else:
+            print "Refusing to continue... this could harm your computer..."
+            print "You should really load thinkpad_acpi to run this script" 
+            
+            
+        
+        
+        
         sys.exit(2)
     
     #cat /etc/modprobe.d/thinkfan.conf 
@@ -194,6 +245,9 @@ def check_config():
 
     
 
+    #cfg = open("/sys/module/thinkpad_acpi/parameters/fan_control")   
+    #if cfg.readline().strip() != "Y":
+        #raise EnvironmentError("misconfigured")
 
 
 
