@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, time, atexit
+import sys, os, time
 from signal import SIGTERM 
 
 class Daemon:
@@ -15,6 +15,7 @@ class Daemon:
         self.stderr = stderr
         self.pidfile = pidfile
         self.name = name
+
     def daemonize(self):
         """
         do the UNIX double-fork magic, see Stevens' "Advanced 
@@ -44,7 +45,9 @@ class Daemon:
         except OSError, e: 
             sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
             sys.exit(1) 
-    
+        
+        pid = str(os.getpid())
+        print "[%s pid: %s]" % (self.name, pid)
         # redirect standard file descriptors
         sys.stdout.flush()
         sys.stderr.flush()
@@ -54,14 +57,10 @@ class Daemon:
         os.dup2(si.fileno(), sys.stdin.fileno())
         os.dup2(so.fileno(), sys.stdout.fileno())
         os.dup2(se.fileno(), sys.stderr.fileno())    
-        # write pidfile
-        atexit.register(self.delpid)
-        pid = str(os.getpid())
-        open(self.pidfile,'w+').write("%s\n" % pid)
-        #self.start()
+        open(self.pidfile,'w+').write("%s\n" % (pid))
         
-    def delpid(self):
-        os.remove(self.pidfile)
+    #def delpid(self):
+    #    os.remove(self.pidfile)
 
     def start(self):
         """
@@ -101,6 +100,7 @@ class Daemon:
             sys.stderr.write(message % self.pidfile)
             return # not an error in a restart
         # Try killing the daemon process    
+        #import pdb; pdb.set_trace()
         try:
             os.kill(pid, SIGTERM)
         except OSError, err:
