@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """ 
-   x121_fan_control.py 
-
+   daemon-fan.py 
+   
+   Tested only on my LOUSY Lenove Thinkpad x121e, use at your own risk.
 #  Copyright 2012 Oz N <nahumoz__AT_NONONO_SPAMHERE g m a i l dot com>
 #  
 #  This program is free software; you can redistribute it and/or modify
@@ -19,7 +20,11 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
+#
+#  WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING 
 #  
+#  This program can FRY your COMPUTER! I am not to be held responsible if 
+#  you trust this program for 100 precent without reading what it does!!!
 """
 # http://www.jejik.com/articles/2007/02/a_simple_unix_linux_daemon_in_python/
 # http://motoma.io/daemonizing-a-python-script/
@@ -144,7 +149,7 @@ class FanControlDaemon(Daemon):
     
     def check_proc(self):
         """
-        check for pid file, create pid file
+        check for pid file
         """
         # Check for a pidfile to see if the daemon already runs
         # instead opening self pidfile many times, we should just
@@ -154,28 +159,21 @@ class FanControlDaemon(Daemon):
             proc = pf.read()
             pid = int(proc.strip())
             pf.close()
+            return pid
         except IOError:
-            pid = None
-            return pid
-        if pid:
-            return pid
-    
+            message = "pidfile %s does not exist. Daemon not running?\n"
+            sys.stderr.write(message % self.pidfile)
+            
     def has_process(self):
         """
         go trough the processes tree and see if daemon.pid exists.
-        # if not silently erase the file
-# if pid exists as a process and the command line args are really daemon-fan.py
-       
-        #process = Popen(['ps', '-eo' ,'pid,args'], stdout=PIPE, stderr=PIPE)
-#stdout, notused = process.communicate()
-#
-#    pid, cmdline = line.split(' ', 1)
-    #Do whatever filtering and processing is needed
-# [ line for line in stdout.splitlines() ]
-# pids, cmds = zip(*[ line.split() for line in stdout.splitlines() ])
-# stop method
-# if not silently erase the file
-# if pid exists as a process and the command line args are really daemon-fan.py
+        if pid exists, and cli args for pid are the same as the 
+        calling program it is safe to kill the program. 
+        Hence, return some positive integer.
+        Else, return negative. 
+        If a positive integer is returned: the stop method
+        will kill the process.
+        If a negative integer is returned: it silently erases the file.
         """
         pid = self.check_proc()
         if pid:
@@ -183,26 +181,31 @@ class FanControlDaemon(Daemon):
                 stderr=sp.PIPE)
             ptree, notused = ptree.communicate()
             ptree = ptree.splitlines()
-            pids, cmds = zip(*[ line.split(' ',1) for line in ptree ])
+            pids, cmds = zip(*[ line.lstrip().split(' ',1) for line in ptree ])
             try:
-                idx = pids.index(pid)
+                idx = pids.index(str(pid))
                 cmdlne = cmds[idx]
                 # if cmdlne is the same as in the pid file, 
-                # return ok
-                # when ok, the next method self.stop()
-                # can kill the process
+                if self.name in cmdlne:
+                    return pid
+                else:
+                    idx = None
+                    return idx
             except ValueError:
                 idx = None
-                cmd = None
-        
-        else:
+                return idx
+        elif pid != None:
+            print "%s in %s not found ..." % (pid, self.pidfile)
             return None
+        
     def exit_running(self):
         """
         do not start if already running
         """
-        running = self.check_proc()
-        if running:
+        if os.path.exists(self.pidfile):
+            pf = open(self.pidfile,'r')
+            proc = pf.read()
+            running = int(proc.strip())
             message = "pidfile %s already exists. Daemon already running?\n"
             message += "check if process %d still exists\n"
             sys.stderr.write(message % (self.pidfile, running))
@@ -213,9 +216,6 @@ class FanControlDaemon(Daemon):
         Start in forground
         """
         self.exit_running()
-        #pid = str(os.getpid())
-        #print "[pid: %s , cli: %s]" % (pid, self.name)
-        #open(self.pidfile,'w+').write("%s %s\n" % (pid, self.name))
         self.run()
     
     def startd(self):
@@ -224,13 +224,34 @@ class FanControlDaemon(Daemon):
         """
         # Check for a pidfile to see if the daemon already runs
         self.exit_running()
-        # Start the daemon
+        #if not os.path.exists(self.pidfile):
+            # Start the daemon
         self.daemonize()
-        # after self.daemonize()
-        # all output is redirected
+            # after self.daemonize()
+            # all output is redirected
         print open(self.pidfile).read()
         self.run()
 
+    def stop(self):
+        """
+        Pranoid stop
+        Stop the daemon, but only if pid has the right args.
+        """
+        pid = self.has_process()
+        if pid > 0:
+            # Try killing the daemon process    
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except OSError, err:
+                err = str(err)
+                print err
+                sys.exit(1)
+        else:
+            pass
+            
+        if os.path.exists(self.pidfile):
+            os.remove(self.pidfile)
+            
     def restart(self):
         """
         Restart the daemon
@@ -320,12 +341,6 @@ Would you like to fix it now [Y/n]?
             print "You should really load thinkpad_acpi to run this script" 
             sys.exit(2)
         
-
-# todo: before killing the process make sure will kill the right process
-# todo: before erasing the file try killing the process
-
-
-
 if __name__ == "__main__":
     
     if not os.getuid() == 0:
@@ -385,22 +400,3 @@ if __name__ == "__main__":
         daemon.set_level("auto")
         daemon.stop()
 
-
-#process = Popen(['ps', '-eo' ,'pid,args'], stdout=PIPE, stderr=PIPE)
-#stdout, notused = process.communicate()
-#for line in stdout.splitlines():
-#    pid, cmdline = line.split(' ', 1)
-    #Do whatever filtering and processing is needed
-# [ line for line in stdout.splitlines() ]
-# pids, cmds = zip(*[ line.split() for line in stdout.splitlines() ])
-# stop method
-# if pid exists as a process and the command line args are really daemon-fan.py
-#    kill that process
-#    than erase the file
-# if not silently erase the file
-
-#>>> process = sp.Popen(['ps', '-eo' ,'pid,args'], stdout=sp.PIPE, stderr=sp.PIPE)
-#>>> stdout, notused = process.communicate()
-#>>> 
-#>>> pids
-#('PID', '1', '2', '3', '6', '7', '21', '22', '23', '24', '25', '26', '27', '28', '32', '33', '34', '35', '36', '37', '121', '154', '172', '173', '174', '175', '176', '177', '228', '229', '356', '570', '578', '600', '606', '752', '1508', '1509', '1784', '1815', '1820', '1822', '1851', '1878', '1952', '2230', '2310', '2327', '2372', '2493', '2607', '2643', '2679', '2808', '2835', '2866', '2883', '2910', '2930', '2931', '2958', '3140', '3286', '3305', '3349', '3350', '3397', '3412', '3444', '3468', '3472', '3476', '3540', '3543', '3544', '3556', '3726', '3727', '3728', '3729', '3730', '3731', '3733', '3740', '3881', '3919', '3920', '3928', '3975', '3977', '3980', '4000', '4003', '4004', '4014', '4020', '4025', '4030', '4032', '4036', '4038', '4041', '4043', '4045', '4047', '4050', '4051', '4052', '4054', '4055', '4059', '4067', '4076', '4078', '4079', '4081', '4082', '4108', '4203', '4211', '4218', '4310', '4337', '4352', '4395', '4459', '4791', '5973', '6208', '6539', '6541', '6542', '6543', '6544', '6545', '6546', '6547', '6548', '6549', '6550', '6600', '6601', '6602', '6605', '6608', '6610', '7079', '7094', '7129', '7664', '7672', '7758', '7803', '7915', '8019', '8020', '8227', '8625', '9004', '9077', '9330', '9356', '9694', '10044', '13327', '13328', '13336', '13708', '13713', '16990', '17270', '18732', '18993', '18994', '19002', '19373', '19554', '19655', '19662', '19670', '19674', '19675', '19681', '19682', '20897', '20986', '23787', '24186', '24190', '27355', '28721', '29105', '29312', '29313', '29314', '29315', '29316', '29520', '30019', '30026', '31332', '31916', '31929')
