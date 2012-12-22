@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # -*- coding: utf-8 -*-
 """ 
    x121_fan_control.py 
@@ -148,16 +147,55 @@ class FanControlDaemon(Daemon):
         check for pid file, create pid file
         """
         # Check for a pidfile to see if the daemon already runs
+        # instead opening self pidfile many times, we should just
+        # set self.controlpid
         try:
             pf = open(self.pidfile,'r')
             pid = int(pf.read().strip())
             pf.close()
         except IOError:
             pid = None
-            return None
+            return pid
         if pid:
             return pid
     
+    def has_process(self):
+        """
+        go trough the processes tree and see if daemon.pid exists.
+        # if not silently erase the file
+# if pid exists as a process and the command line args are really daemon-fan.py
+       
+        #process = Popen(['ps', '-eo' ,'pid,args'], stdout=PIPE, stderr=PIPE)
+#stdout, notused = process.communicate()
+#
+#    pid, cmdline = line.split(' ', 1)
+    #Do whatever filtering and processing is needed
+# [ line for line in stdout.splitlines() ]
+# pids, cmds = zip(*[ line.split() for line in stdout.splitlines() ])
+# stop method
+# if not silently erase the file
+# if pid exists as a process and the command line args are really daemon-fan.py
+        """
+        pid = self.check_proc()
+        if pid:
+            ptree = sp.Popen(['ps', '-eo' ,'pid,args'], stdout=sp.PIPE, 
+                stderr=sp.PIPE)
+            ptree, notused = ptree.communicate()
+            ptree = ptree.splitlines()
+            pids, cmds = zip(*[ line.split(' ',1) for line in ptree ])
+            try:
+                idx = pids.index(pid)
+                cmdlne = cmds[idx]
+                # if cmdlne is the same as in the pid file, 
+                # return ok
+                # when ok, the next method self.stop()
+                # can kill the process
+            except ValueError:
+                idx = None
+                cmd = None
+        
+        else:
+            return None
     def exit_running(self):
         """
         do not start if already running
@@ -175,8 +213,8 @@ class FanControlDaemon(Daemon):
         """
         self.exit_running()
         pid = str(os.getpid())
-        print "[pid: %s]" % pid   
-        open(self.pidfile,'w+').write("%s\n" % pid)
+        print "[pid: %s , cli: %s]" % (pid, self.name)
+        open(self.pidfile,'w+').write("%s %s\n" % (pid, self.name))
         self.run()
     
     def startd(self):
@@ -187,7 +225,11 @@ class FanControlDaemon(Daemon):
         self.exit_running()
         # Start the daemon
         pid = str(os.getpid())
-        open(self.pidfile,'w+').write("%s\n" % pid)
+        line = "[pid: %s , cli: %s]" % (pid, self.name)
+        print line, self.pidfile
+        open("test",'w').writelines(line+"\n")
+        open(self.pidfile,'w').writelines([line+"\n"])
+        # self.daemonize() rewrites the file. this needs a fix!
         self.daemonize()
         self.run()
 
@@ -240,6 +282,8 @@ def check_config():
     lsmod | grep thinkpad_acpi
     grep /etc/modprobe.d/thinkfan.conf
     """        
+    import kmod 
+    km = kmod.Kmod()
     # first that we have the modules loades
     loaded_modules = [ m.name for m in km.loaded() ]  
     if u"thinkpad_acpi" not in loaded_modules:
@@ -266,7 +310,6 @@ Would you like to fix it now [Y/n]?
     if u"coretemp" not in loaded_modules:
         load_module("coretemp")
         #module is not loaded!   
-        #raise EnvironmentError("Module 'coretemp is not loaded'")
         ans = 'Y'
         ans = raw_input("Module 'coretemp is not loaded', would you ", 
         "like to load it [Y/n] ?")
@@ -279,16 +322,14 @@ Would you like to fix it now [Y/n]?
             print "You should really load thinkpad_acpi to run this script" 
             sys.exit(2)
         
-    #cat /etc/modprobe.d/thinkfan.conf 
-    #options thinkpad_acpi fan_control=1
-    #cfg = open("/sys/module/thinkpad_acpi/parameters/fan_control")   
-    #if cfg.readline().strip() != "Y":
-        #raise EnvironmentError("misconfigured")
 
-# todo: check config before running
+# todo: before killing the process make sure will kill the right process
+# todo: before erasing the file try killing the process
+
+
 
 if __name__ == "__main__":
-    daemon = FanControlDaemon('/var/run/thinkpadfan.pid')
+    
     if not os.getuid() == 0:
         print "You must be root to change fan speed."
         sys.exit(2)
@@ -313,13 +354,21 @@ if __name__ == "__main__":
     
     action = sys.argv[1]
     
+    
+    
     if not 'start' == action and not 'stop' == action and not 'restart' == action \
         and not 'status' == action:
         parser.print_help()
         print ext_usage
         sys.exit(1)
+    
+    # check that everything is OK
+    check_config()
     sys.argv = sys.argv[1:]
+    
     args = parser.parse_args()
+    
+    daemon = FanControlDaemon(parser.prog,'/var/run/%s.pid' % parser.prog)
     if action == 'status':
         running = daemon.check_proc()
         if running:
@@ -337,3 +386,23 @@ if __name__ == "__main__":
     if action == "stop":
         daemon.set_level("auto")
         daemon.stop()
+
+
+#process = Popen(['ps', '-eo' ,'pid,args'], stdout=PIPE, stderr=PIPE)
+#stdout, notused = process.communicate()
+#for line in stdout.splitlines():
+#    pid, cmdline = line.split(' ', 1)
+    #Do whatever filtering and processing is needed
+# [ line for line in stdout.splitlines() ]
+# pids, cmds = zip(*[ line.split() for line in stdout.splitlines() ])
+# stop method
+# if pid exists as a process and the command line args are really daemon-fan.py
+#    kill that process
+#    than erase the file
+# if not silently erase the file
+
+#>>> process = sp.Popen(['ps', '-eo' ,'pid,args'], stdout=sp.PIPE, stderr=sp.PIPE)
+#>>> stdout, notused = process.communicate()
+#>>> 
+#>>> pids
+#('PID', '1', '2', '3', '6', '7', '21', '22', '23', '24', '25', '26', '27', '28', '32', '33', '34', '35', '36', '37', '121', '154', '172', '173', '174', '175', '176', '177', '228', '229', '356', '570', '578', '600', '606', '752', '1508', '1509', '1784', '1815', '1820', '1822', '1851', '1878', '1952', '2230', '2310', '2327', '2372', '2493', '2607', '2643', '2679', '2808', '2835', '2866', '2883', '2910', '2930', '2931', '2958', '3140', '3286', '3305', '3349', '3350', '3397', '3412', '3444', '3468', '3472', '3476', '3540', '3543', '3544', '3556', '3726', '3727', '3728', '3729', '3730', '3731', '3733', '3740', '3881', '3919', '3920', '3928', '3975', '3977', '3980', '4000', '4003', '4004', '4014', '4020', '4025', '4030', '4032', '4036', '4038', '4041', '4043', '4045', '4047', '4050', '4051', '4052', '4054', '4055', '4059', '4067', '4076', '4078', '4079', '4081', '4082', '4108', '4203', '4211', '4218', '4310', '4337', '4352', '4395', '4459', '4791', '5973', '6208', '6539', '6541', '6542', '6543', '6544', '6545', '6546', '6547', '6548', '6549', '6550', '6600', '6601', '6602', '6605', '6608', '6610', '7079', '7094', '7129', '7664', '7672', '7758', '7803', '7915', '8019', '8020', '8227', '8625', '9004', '9077', '9330', '9356', '9694', '10044', '13327', '13328', '13336', '13708', '13713', '16990', '17270', '18732', '18993', '18994', '19002', '19373', '19554', '19655', '19662', '19670', '19674', '19675', '19681', '19682', '20897', '20986', '23787', '24186', '24190', '27355', '28721', '29105', '29312', '29313', '29314', '29315', '29316', '29520', '30019', '30026', '31332', '31916', '31929')
