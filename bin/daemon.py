@@ -6,10 +6,13 @@ from signal import SIGTERM
 class Daemon:
     """
     A generic daemon class.
-    
     Usage: subclass the Daemon class and override the run() method
     """
-    def __init__(self, name, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
+    def __init__(self, name, pidfile, stdin='/dev/null', stdout='/dev/null', 
+        stderr='/dev/null'):
+        """
+        initialize some properties needed later.
+        """
         self.stdin = stdin
         self.stdout = stdout
         self.stderr = stderr
@@ -58,9 +61,6 @@ class Daemon:
         os.dup2(so.fileno(), sys.stdout.fileno())
         os.dup2(se.fileno(), sys.stderr.fileno())    
         open(self.pidfile,'w+').write("%s\n" % (pid))
-        
-    #def delpid(self):
-    #    os.remove(self.pidfile)
 
     def start(self):
         """
@@ -99,8 +99,8 @@ class Daemon:
             message = "pidfile %s does not exist. Daemon not running?\n"
             sys.stderr.write(message % self.pidfile)
             return # not an error in a restart
+        
         # Try killing the daemon process    
-        #import pdb; pdb.set_trace()
         try:
             os.kill(pid, SIGTERM)
         except OSError, err:
