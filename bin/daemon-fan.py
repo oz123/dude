@@ -151,7 +151,8 @@ class FanControlDaemon(Daemon):
         # set self.controlpid
         try:
             pf = open(self.pidfile,'r')
-            pid = int(pf.read().strip())
+            proc = pf.read()
+            pid = int(proc.strip())
             pf.close()
         except IOError:
             pid = None
@@ -212,9 +213,9 @@ class FanControlDaemon(Daemon):
         Start in forground
         """
         self.exit_running()
-        pid = str(os.getpid())
-        print "[pid: %s , cli: %s]" % (pid, self.name)
-        open(self.pidfile,'w+').write("%s %s\n" % (pid, self.name))
+        #pid = str(os.getpid())
+        #print "[pid: %s , cli: %s]" % (pid, self.name)
+        #open(self.pidfile,'w+').write("%s %s\n" % (pid, self.name))
         self.run()
     
     def startd(self):
@@ -224,13 +225,10 @@ class FanControlDaemon(Daemon):
         # Check for a pidfile to see if the daemon already runs
         self.exit_running()
         # Start the daemon
-        pid = str(os.getpid())
-        line = "[pid: %s , cli: %s]" % (pid, self.name)
-        print line, self.pidfile
-        open("test",'w').writelines(line+"\n")
-        open(self.pidfile,'w').writelines([line+"\n"])
-        # self.daemonize() rewrites the file. this needs a fix!
         self.daemonize()
+        # after self.daemonize()
+        # all output is redirected
+        print open(self.pidfile).read()
         self.run()
 
     def restart(self):
