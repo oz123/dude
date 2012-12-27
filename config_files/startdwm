@@ -1,0 +1,21 @@
+#!/bin/bash
+# for a list of keyboard models see
+#  /usr/share/X11/xkb/rules/xorg.lst
+#KEYBOARD_MODEL=pc105
+KEYBOARD_MODEL=dell101
+
+setxkbmap -model $KEYBOARD_MODEL
+xscreensaver -nosplash &
+ivman &
+IVMANPID=$!
+while true
+do
+    lo=`setxkbmap -query | grep lay | cut -d : -f 2| sed 's/^ *//g'`
+    xsetroot -name "$(date +"%H:%M:%S|%d-%m") | <|$lo|>"
+    sleep 1 
+done &
+XSETROOTPID=$!
+xset b off
+/home/nahum/bin/dwm > .dwm.log
+kill -9 $IVMANPID $XSETROOTPID
+
