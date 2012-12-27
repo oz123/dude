@@ -1,15 +1,1 @@
-#!/usr/bin/env bash
-
-# not much to see here, simple xsession script to start dwm
-# rename to .xsession to, put in your $HOME.
-
-
-while true
-do
-
-lo=`setxkbmap -query | grep lay | cut -d : -f 2| sed 's/^ *//g'`
-xsetroot -name " <|$lo|> `date` `uptime | sed 's/.*,//'`"
-sleep 1
-
-done &
-/path/to/you/dwm > /dev/null;
+exec ~/bin/startdwm
