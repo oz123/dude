@@ -2,8 +2,22 @@ if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
    set fileencodings=utf-8,latin1
 endif
 
-filetype plugin on
+if has("gui_running")
+   if has("gui_gtk2")
+        let dsm=system('fc-list | grep -c Droid\ Sans\ Mono')
+        let cons=system('fc-list | grep -c Inconsola')
+        if ( dsm > 0)
+           set gfn=Droid\ Sans\ Mono\ 10
+        elseif ( cons > 0)
+           set gfn=Inconsolata\ 12
+        else 
+           set gfn=Monospace\ 10
+        endif
+        
+    endif
+endif
 
+filetype plugin on
 
 set nocompatible	" Use Vim defaults (much better!)
 set bs=indent,eol,start		" allow backspacing over everything in insert mode
