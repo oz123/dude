@@ -383,6 +383,7 @@ Bundle 'michaeljsmith/vim-indent-object'
 " operators, highlighting, run and ipdb breakpoints)
 Bundle 'klen/python-mode'
 "Bundle 'joonty/vdebug.git'
+Bundle 'scrooloose/syntastic'
 
  filetype plugin indent on     " required!
 
