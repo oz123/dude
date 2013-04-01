@@ -587,3 +587,7 @@ let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 let g:Powerline_symbols = 'fancy'
 
 " based on https://github.com/fisadev/fisa-vim-config
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_loc_list_height=4
+
