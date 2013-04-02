@@ -19,8 +19,6 @@ if has("gui_running")
     endif
 endif
 
-filetype plugin on
-filetype indent on
 
 set nocompatible	" Use Vim defaults (much better!)
 set bs=indent,eol,start		" allow backspacing over everything in insert mode
@@ -31,46 +29,6 @@ set viminfo='20,\"50	" read/write a .viminfo file, don't store more
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 
-" Only do this part when compiled with support for autocommands
-if has("autocmd")
-  augroup redhat
-	" In text files, always limit the width of text to 78 characters
-	autocmd BufRead *.txt set tw=78
-	" When editing a file, always jump to the last cursor position
-	autocmd BufReadPost *
-	\ if line("'\"") > 0 && line ("'\"") <= line("$") |
-	\	exe "normal! g'\"" |
-	\ endif
-  augroup END
-endif
-
-if has("cscope") && filereadable("/usr/bin/cscope")
-   set csprg=/usr/bin/cscope
-   set csto=0
-   set cst
-   set nocsverb
-   " add any database in current directory
-   if filereadable("cscope.out")
-	  cs add cscope.out
-   " else add database pointed to by environment
-   elseif $CSCOPE_DB != ""
-	  cs add $CSCOPE_DB
-   endif
-   set csverb
-endif
-
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-"if &t_Co > 2 || has("gui_running")
-"  syntax on
-"  set hlsearch
-"endif
-
-"if &term=="xterm"
-"	  set t_Co=8
-"	  set t_Sb=[4%dm
-"	  set t_Sf=[3%dm
-"endif
 
 set shortmess=filnxtToOI 
 set noea
@@ -89,9 +47,6 @@ set scrolloff=6
 " use 4 spaces for tabs
 set tabstop=4 softtabstop=4 shiftwidth=4
 
-" display indentation guides
-"set list listchars=tab:\u2758-,trail:·,extends:»,precedes:«,nbsp:×
-
 " convert spaces to tabs when reading file
 autocmd! bufreadpost *.py set noexpandtab | retab! 4
 
@@ -99,8 +54,6 @@ autocmd! bufreadpost *.py set noexpandtab | retab! 4
 autocmd! bufwritepre *.py set expandtab | retab! 4
 
 
-filetype on 
-syntax on
 set term=xterm-256color
 highlight Comment ctermbg=black ctermfg=cyan
 set t_kb=
@@ -108,11 +61,6 @@ set backspace=2
 autocmd BufRead *.py set tabstop=4
 autocmd BufRead * set nowrap
 autocmd BufRead * set go+=b
-
-
-"autocmd FileType python compiler pylint
-
-
 
 "make nice spelling 
 "setlocal spell spelllang=en_us
@@ -132,20 +80,9 @@ map <F11> :set filetype=python <cr>
 map <F10> :call Pylint(1)<cr>
 map <F9> :!sci -T %<cr><cr>
 
-let tlist_python_settings = 'python;n:namespace;v:variables;d:macro;t:typedef;c:CLASSES;m:MEMBERS;f:Functions;p:PROPERTIES;l:GLOBALS'
-
-"let g:tlist_python_settings = {
-"      \ 'lang': 'python',
-"      \ 'format': 'taglisttoo#lang#python#Format',
-"      \ 'tags': {
-"        \ 'c': 'class',
-"        \ 'm': 'member',
-"        \ 'f': 'function'
-"      \ }
-" #   \ }
+"let tlist_python_settings = 'python;n:namespace;v:variables;d:macro;t:typedef;c:CLASSES;m:MEMBERS;f:Functions;p:PROPERTIES;l:GLOBALS'
 
 au FileType python set omnifunc=pythoncomplete#Complete
-"call pathogen#infect()
 
 " Author: Nick Anderson <nick at anders0n.net>
 " Website: http://www.cmdln.org
@@ -264,6 +201,12 @@ Bundle 'klen/python-mode'
 "Bundle 'joonty/vdebug.git'
 Bundle 'scrooloose/syntastic'
 
+filetype plugin on
+filetype indent on
+filetype on 
+syntax on
+
+
 " solarized
 syntax enable
 set background=light
@@ -329,7 +272,7 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 imap <C-J> <C-X><C-O>
 
 " show pending tasks list
-map <F2> :TaskList<CR>
+"map <F2> :TaskList<CR>
 
 " save as sudo
 ca w!! w !sudo tee "%"
