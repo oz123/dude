@@ -2,6 +2,7 @@ if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
    set fileencodings=utf-8,latin1
 endif
 
+syntax enable
 if has("gui_running")
    if has("gui_gtk2")
         set guioptions-=T  "remove toolbar
@@ -62,14 +63,14 @@ autocmd BufRead * set go+=b
 
 "make nice spelling 
 "setlocal spell spelllang=en_us
-highlight clear SpellBad
-highlight SpellBad term=standout ctermfg=1 term=undercurl cterm=undercurl
-highlight clear SpellCap
-highlight SpellCap term=undercurl cterm=undercurl
-highlight clear SpellRare
-highlight SpellRare term=undercurl cterm=undercurl
-highlight clear SpellLocal
-highlight SpellLocal term=undercurl cterm=undercurl
+"highlight clear SpellBad
+"highlight SpellBad term=standout ctermfg=1 term=undercurl cterm=undercurl
+"highlight clear SpellCap
+"highlight SpellCap term=undercurl cterm=undercurl
+"highlight clear SpellRare
+"highlight SpellRare term=undercurl cterm=undercurl
+"highlight clear SpellLocal
+"highlight SpellLocal term=undercurl cterm=undercurl
 
 set pastetoggle=<F2>
 "map <F12> :new \| r!pylint #<cr><cr>
@@ -206,10 +207,7 @@ filetype on
 syntax on
 
 
-" solarized
-syntax enable
-set background=light
-colorscheme solarized
+
 
 
 " tabs and spaces handling
@@ -277,7 +275,7 @@ imap <C-J> <C-X><C-O>
 ca w!! w !sudo tee "%"
 
 " colors and settings of autocompletion
-highlight Pmenu ctermbg=4 guibg=LightGray
+"highlight Pmenu ctermbg=4 guibg=LightGray
 " highlight PmenuSel ctermbg=8 guibg=DarkBlue guifg=Red
 " highlight PmenuSbar ctermbg=7 guibg=DarkGray
 " highlight PmenuThumb guibg=Black
@@ -409,6 +407,7 @@ let g:syntastic_python_checkers=['pylint']
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
 let g:Powerline_symbols = 'fancy'
+
 
 colorscheme solarized
 if has("gui_running")
