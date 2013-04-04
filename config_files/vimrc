@@ -55,7 +55,7 @@ autocmd! bufreadpost *.py set noexpandtab | retab! 4
 " convert tabs to spaces before writing file
 autocmd! bufwritepre *.py set expandtab | retab! 4
 
-set t_kb=^?
+set t_kb=
 set backspace=2
 autocmd BufRead *.py set tabstop=4
 autocmd BufRead * set nowrap
@@ -419,7 +419,3 @@ else
     highlight PmenuSel ctermfg=120 ctermbg=0
     highlight Normal ctermfg=grey ctermbg=black
 endif
-~                                                                                                                                                                                                              
-~                                                                                                                                                                                                              
-~                                                                                                                                                                                                              
-~                        
