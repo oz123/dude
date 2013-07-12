@@ -16,7 +16,13 @@ if has("gui_running")
            set gfn=Monospace\ 10
         endif
         set background=light
-        set lines=35 columns=120
+        set lines=35 
+    elseif has("gui_win32")
+		set guifont=Powerline\ Consolas:h11
+        "set guifont=Consolas:h11
+    endif
+columns=120
+    
     endif
 else
     set term=xterm-256color
