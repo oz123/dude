@@ -24,7 +24,7 @@ else
 endif
 
 set nocompatible	" Use Vim defaults (much better!)
-set bs=indent,eol,start		" allow backspacing over everything in insert mode
+set bs=indent,eol,start		" allow backspacing over everything in insert mode       
 set ai			" always set autoindenting on
 "set backup		" keep a backup file
 set viminfo='20,\"50	" read/write a .viminfo file, don't store more
@@ -76,7 +76,7 @@ set pastetoggle=<F2>
 "map <F12> :new \| r!pylint #<cr><cr>
 "map <F12> :new \| r!pylint #<cr><cr>
 map <F11> :set filetype=python <cr>
-map <F10> :call Pylint(1)<cr>
+map <F10> :call ylint(1)<cr>
 map <F9> :!sci -T %<cr><cr>
 
 "let tlist_python_settings = 'python;n:namespace;v:variables;d:macro;t:typedef;c:CLASSES;m:MEMBERS;f:Functions;p:PROPERTIES;l:GLOBALS'
@@ -197,9 +197,14 @@ Bundle 'michaeljsmith/vim-indent-object'
 " Python mode (indentation, doc, refactor, lints, code checking, motion and
 " operators, highlighting, run and ipdb breakpoints)
 Bundle 'klen/python-mode'
-"Bundle 'joonty/vdebug.git'
+Bundle 'joonty/vdebug.git'
 Bundle 'scrooloose/syntastic'
 Bundle 'guns/xterm-color-table.vim'
+"Bundle 'docunext/closetag.vim'
+Bundle 'tpope/vim-ragtag'
+Bundle 'vim-scripts/Conque-Shell'
+Bundle 'myusuf3/numbers.vim'
+Bundle 'matze/vim-move'
 
 filetype plugin on
 filetype indent on
@@ -402,13 +407,15 @@ let g:Powerline_symbols = 'fancy'
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_loc_list_height=4
-let g:syntastic_python_checkers=['pylint']
+let g:syntastic_python_checkers=['flake8']
 let g:syntastic_warning_symbol = 'ww'
 
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
 let g:Powerline_symbols = 'fancy'
 
+set textwidth=80
+set colorcolumn=+1
 
 colorscheme solarized
 if has("gui_running")
@@ -419,4 +426,16 @@ else
     highlight Pmenu ctermbg=2 ctermfg=16
     highlight PmenuSel ctermfg=120 ctermbg=0
     highlight Normal ctermfg=grey ctermbg=black
+    hi ColorColumn ctermbg=246
 endif
+
+inoremap <M-o> <Esc>o
+inoremap <C-j> <Down>
+let g:ragtag_global_maps = 1
+
+set autochdir
+
+let g:enable_numbers = 0
+nmap ,N :NumbersToggle <CR>
+
+nmap \td :vimgrep /TODO/ ./**/* <CR> :copen <CR>map 
