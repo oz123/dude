@@ -155,10 +155,10 @@ def main():
             except KeyboardInterrupt:
                 os.remove(pidfile)
                 sys.exit(0)
-                 
+
     if args.daemon:
-       print "will daemon"    
-        
+       print "will daemon"
+
 if __name__ == '__main__':
     main()
 
