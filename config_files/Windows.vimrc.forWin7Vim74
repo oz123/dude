@@ -1,0 +1,131 @@
+﻿set nocompatible               " be iMproved
+filetype off                  " required!
+
+
+if has("gui_running")
+	set guioptions-=T 
+	if has("gui_win32")
+		set langmenu=en_US
+		language messages en
+	endif
+endif
+
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+" required! 
+Bundle 'gmarik/vundle'
+
+" My Bundles here:
+"
+" original repos on github
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'tpope/vim-rails.git'
+" vim-scripts repos
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+" original repos on github
+Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'tpope/vim-rails.git'
+" vim-scripts repos
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+" non github repos
+Bundle 'git://git.wincent.com/command-t.git'
+Bundle 'altercation/vim-colors-solarized'
+" Autocompletion
+Bundle 'AutoComplPop'
+" Python code checker
+Bundle 'pyflakes.vim'
+" Search results counter
+"Bundle 'IndexedSearch'
+" XML/HTML tags navigation
+Bundle 'matchit.zip'
+" Gvim colorscheme
+Bundle 'Wombat'
+" Yank history navigation
+Bundle 'YankRing.vim'
+" ...
+" Better file browser
+Bundle 'scrooloose/nerdtree'
+" Code commenter
+Bundle 'scrooloose/nerdcommenter'
+" Class/module browser
+Bundle 'majutsushi/tagbar'
+" Code and files fuzzy finder
+Bundle 'kien/ctrlp.vim'
+" Zen coding
+Bundle 'mattn/zencoding-vim'
+" Git integration
+Bundle 'motemen/git-vim'
+" Tab list panel
+Bundle 'kien/tabman.vim'
+" Powerline
+Bundle 'Lokaltog/vim-powerline'
+" Terminal Vim with 256 colors colorscheme
+Bundle 'fisadev/fisa-vim-colorscheme'
+" Consoles as buffers
+Bundle 'rosenfeld/conque-term'
+" Pending tasks list
+Bundle 'fisadev/FixedTaskList.vim'
+" Surround
+Bundle 'tpope/vim-surround'
+" Autoclose
+Bundle 'Townk/vim-autoclose'
+" Indent text object
+Bundle 'michaeljsmith/vim-indent-object'
+" Python mode (indentation, doc, refactor, lints, code checking, motion and
+" operators, highlighting, run and ipdb breakpoints)
+Bundle 'klen/python-mode'
+Bundle 'scrooloose/syntastic'
+"Bundle 'ashwin/vim-powerline'
+"Bundle 'millermedeiros/vim-statline'
+Bundle 'stephenmckinney/vim-solarized-powerline'
+
+filetype plugin indent on     " required!
+ 
+if has("gui_running")
+   set guioptions-=T 
+   if has("gui_win32")
+	  set guifont=Consolas\ for\ Powerline\ FixedD:h11
+	  let g:Powerline_symbols = 'fancy'
+	  set background=light
+	  colorscheme solarized
+	  "let g:Powerline_theme='short'
+	  "let g:Powerline_colorscheme='solarized256_light'
+   endif
+else
+	"colorscheme wombat
+	let g:Powerline_theme='short'
+	let g:Powerline_colorscheme='solarized16_dark'
+endif
+filetype plugin indent on     " required!
+
+syntax enable
+
+set ls=2
+set encoding=utf-8
+
+
+
+let g:syntastic_enable_balloons = 1
+let g:syntastic_always_populate_loc_list=0
+"let g:syntastic_auto_loc_list=1
+"let g:syntastic_loc_list_height=4
+
+set pastetoggle=<F2>
+
+" toggle Tagbar display
+map <F4> :TagbarToggle<CR>
+" autofocus on Tagbar open
+let g:tagbar_autofocus = 1
+" NERDTree (better file browser) toggle
+map <F3> :NERDTreeToggle<CR>
+
+
