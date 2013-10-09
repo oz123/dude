@@ -99,9 +99,13 @@ if has("gui_running")
 	  "let g:Powerline_colorscheme='solarized256_light'
    endif
 else
-	"colorscheme wombat
-	let g:Powerline_theme='short'
-	let g:Powerline_colorscheme='solarized16_dark'
+     set background=dark	
+     if &term=~'win32'
+        colorscheme wombat
+	let g:Powerline_colorscheme='solarized256_dark'
+     else
+        colorscheme solarized 
+     endif 
 endif
 filetype plugin indent on     " required!
 
