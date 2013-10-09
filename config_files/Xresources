@@ -1,0 +1,21 @@
+xterm*geometry:           80x25
+xterm*faceName:           terminusbold:pixelsize=14
+!xterm*font:             -*-dina-medium-r-*-*-16-*-*-*-*-*-*-*
+xterm*dynamicColors:      true
+xterm*utf8:               2
+xterm*eightBitInput:      true
+xterm*saveLines:          512
+xterm*scrollTtyKeypress:  true
+xterm*scrollTtyOutput:    false
+!xterm*scrollBar:          true
+!xterm*rightScrollBar:     true
+xterm*jumpScroll:         true
+xterm*multiScroll:        true
+xterm*toolBar:            false
+xterm*foreground:         white
+xterm*background:         grey10  
+xterm*ttyModes:           erase ^?
+!xterm*loadKeys:       de
+
+! reload with xrdb -load .Xresources
+!  "showrgb" to see all colors

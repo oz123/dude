@@ -16,10 +16,17 @@ if has("gui_running")
            set gfn=Monospace\ 10
         endif
         set background=light
-        set lines=35 columns=120
+        set lines=35 
+    elseif has("gui_win32")
+		set guifont=Powerline\ Consolas:h11
+        "set guifont=Consolas:h11
+    endif
+columns=120
+    
     endif
 else
     set term=xterm-256color
+    "set term=screen-256color
     set t_Co=256
 endif
 
@@ -88,47 +95,6 @@ au FileType python set omnifunc=pythoncomplete#Complete
 " Adapted from sonteks post on Vim as Python IDE
 " http://blog.sontek.net/2008/05/11/python-with-a-modular-ide-vim/
 
-python << EOF
-import vim
-def SetBreakpoint():
-    import re
-    nLine = int( vim.eval( 'line(".")'))
-
-    strLine = vim.current.line
-    strWhite = re.search( '^(\s*)', strLine).group(1)
-
-    vim.current.buffer.append(
-       "%(space)sfrom ipdb import set_trace;set_trace() %(mark)s Breakpoint %(mark)s" %
-         {'space':strWhite, 'mark': '#' * 30}, nLine - 1)
-
-vim.command( 'map <f7> :py SetBreakpoint()<cr>')
-
-def RemoveBreakpoints():
-    import re
-
-    nCurrentLine = int( vim.eval( 'line(".")'))
-
-    nLines = []
-    nLine = 1
-    for strLine in vim.current.buffer:
-        if strLine.lstrip()[:38] == 'from ipdb import set_trace;set_trace()':
-            nLines.append( nLine)
-            print nLine
-        nLine += 1
-
-    nLines.reverse()
-
-    for nLine in nLines:
-        vim.command( 'normal %dG' % nLine)
-        vim.command( 'normal dd')
-        if nLine < nCurrentLine:
-            nCurrentLine -= 1
-
-    vim.command( 'normal %dG' % nCurrentLine)
-
-vim.command( 'map <s-f7> :py RemoveBreakpoints()<cr>')
-EOF
-
 filetype off                   " required!
 
  set rtp+=~/.vim/bundle/vundle/
@@ -154,7 +120,7 @@ Bundle 'altercation/vim-colors-solarized'
 " Autocompletion
 Bundle 'AutoComplPop'
 " Python code checker
-Bundle 'pyflakes.vim'
+" Bundle 'pyflakes.vim'
 " Search results counter
 Bundle 'IndexedSearch'
 " XML/HTML tags navigation
@@ -167,7 +133,7 @@ Bundle 'YankRing.vim'
 " Python and PHP Debugger
 "Bundle 'fisadev/vim-debug.vim'
 " Better file browser
-Bundle 'scrooloose/nerdtree'
+ Bundle 'scrooloose/nerdtree'
 " Code commenter
 Bundle 'scrooloose/nerdcommenter'
 " Class/module browser
@@ -211,10 +177,6 @@ filetype indent on
 filetype on 
 syntax on
 
-
-
-
-
 " tabs and spaces handling
 set expandtab
 set tabstop=4
@@ -245,6 +207,7 @@ let g:tagbar_autofocus = 1
 
 " NERDTree (better file browser) toggle
 map <F3> :NERDTreeToggle<CR>
+"map <F3>  :CommandT <CR>
 
 " tab navigation
 map tn :tabn<CR>
@@ -401,7 +364,6 @@ let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
-let g:Powerline_symbols = 'fancy'
 
 " based on https://github.com/fisadev/fisa-vim-config
 let g:syntastic_always_populate_loc_list=1
@@ -412,14 +374,14 @@ let g:syntastic_warning_symbol = 'ww'
 
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
-let g:Powerline_symbols = 'fancy'
+" let g:Powerline_symbols = 'fancy'
 
 set textwidth=80
 set colorcolumn=+1
 
-colorscheme solarized
 if has("gui_running")
    set background=light
+   colorscheme solarized
 else 
     set background=dark
     hi TabLineSel ctermfg=Blue ctermbg=Yellow
