@@ -1,0 +1,40 @@
+alias gittree='git log --color --graph --decorate --pretty=oneline --abbrev-commit'
+##-ANSI-COLOR-CODES-##
+Color_Off="\[\033[0m\]"
+NO_COLOUR="\[\033[0m\]"
+###-Regular-###
+Red="\[\033[0;31m\]"
+Green="\[\033[0;32m\]"
+Purple="\[\033[0;35m\]"
+####-Bold-####
+BRed="\[\033[1;31m\]"
+BPurple="\[\033[1;35m\]"
+Cyan="\[\033[1;36m\]"
+Blue="\[\033[1;34m\]"
+Yellow="\[\033[0;33m\]"
+
+# set default options for 'less'
+export LESS=-FRSX
+export LESSCHARSET=utf-8
+GIT_PS1_SHOWCOLORHINTS=true
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUPSTREAM='verbose git'
+export GIT_PS1_SHOWDIRTYSTATE GIT_PS1_SHOWUPSTREAM
+export GIT_PS1_SHOWCOLORHINTS
+
+function __prompt_command(){
+if test -z "$WINELOADERNOEXEC"
+then
+    git diff-index --cached --quiet HEAD --  > /dev/null 2>&1
+    if [ $? -eq 1 ]; then
+    	PS1="$Cyan\u$Color_Off@$Cyan\h$Color_Off:$BPurple\w$Color_Off$Red$(__git_ps1)$Color_Off" 
+    else
+    	PS1="$Cyan\u$Color_Off@$Cyan\h$Color_Off:$BPurple\w$Color_Off$Green$(__git_ps1)$Green$Color_Off" 
+    fi
+else
+PS1="$Cyan\u$Color_Off@$Cyan\h$Color_Off:$BPurple\w$Color_Off"
+fi
+PS1+=" \$$Color_Off"
+}
+
+PROMPT_COMMAND=__prompt_command
