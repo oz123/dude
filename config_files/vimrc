@@ -50,9 +50,6 @@ set scrolloff=6
 " use 4 spaces for tabs
 set tabstop=4 softtabstop=4 shiftwidth=4
 
-" convert spaces to tabs when reading file
-autocmd! bufreadpost *.py set noexpandtab | retab! 4
-
 " convert tabs to spaces before writing file
 autocmd! bufwritepre *.py set expandtab | retab! 4
 
@@ -127,7 +124,7 @@ Bundle 'YankRing.vim'
 " Python and PHP Debugger
 "Bundle 'fisadev/vim-debug.vim'
 " Better file browser
- Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/nerdtree'
 " Code commenter
 Bundle 'scrooloose/nerdcommenter'
 " Class/module browser
@@ -297,7 +294,7 @@ nmap ,we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
 nmap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
 nmap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
 " Don't change working directory
-let g:ctrlp_working_path_mode = 0
+let g:ctrlp_working_path_mode = 1
 " Ignore files on fuzzy finder
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/](\.git|\.hg|\.svn)$',
@@ -359,7 +356,7 @@ let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_loc_list_height=4
-let g:syntastic_python_checkers=['pylint']
+let g:syntastic_python_checkers=['flake8', 'pyflakes']
 let g:syntastic_warning_symbol = 'ww'
 
 " to use fancy symbols for powerline, uncomment the following line and use a
@@ -386,3 +383,29 @@ endif
 let g:tagbar_ctags_bin="/usr/bin/ctags" 
 map <F11> :set filetype=python <cr>
 let g:NERDTreeDirArrows=0
+
+set autochdir
+autocmd! bufreadpost *.pas set tabstop=2
+autocmd! bufreadpost *.pas set softtabstop=2 
+
+let g:syntastic_c_check_header = 0
+let g:syntastic_c_no_include_search = 1
+let g:syntastic_c_include_dirs = ['/home/ozdeb/software/cofre/3rd_party/iniparser/src/',]
+let g:syntastic_c_no_default_include_dirs = 1
+let g:syntastic_c_remove_include_errors = 1
+if has("autocmd")
+    au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/include
+endif 
+
+" options for neocomplete
+"let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+" let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+"let g:neocomplete#sources#syntax#min_keyword_length = 3
+" use tab for auto complete 
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+set tabstop=4 softtabstop=4 shiftwidth=4
+" convert tabs to spaces before writing file
+autocmd! bufwritepre *.py set expandtab | retab! 4
+
