@@ -1,0 +1,48 @@
+# quickly setup bindings for x-tile in mate, tiling window
+# management with a nice DE!
+
+# dconf load /org/mate/desktop/keybindings/ < this_file
+# Thanks for mate developers  Issue #45 in mate-control-center
+# is now closed and this is possible again
+
+
+
+[custom6]
+action='x-tile q'
+binding='<Primary><Alt>q'
+name='tile quad'
+
+[custom2]
+action='x-tile v'
+binding='<Alt><Mod4>k'
+name='tile vertical'
+
+[custom5]
+action='x-tile l'
+binding='<Alt><Mod4>l'
+name='tile right'
+
+[custom1]
+action='x-tile z'
+binding='<Primary><Alt>z'
+name='undo tile'
+
+[custom4]
+action='x-tile l'
+binding='<Alt><Mod4>h'
+name='tile left'
+
+[custom0]
+action='x-tile u'
+binding='<Primary><Alt>u'
+name='tile up'
+
+[custom3]
+action='x-tile d'
+binding='<Alt><Mod4>j'
+name='tile down'
+
+[custom7]
+action='x-tile l'
+binding='<Alt><Mod4>3'
+name='tile right 3'
