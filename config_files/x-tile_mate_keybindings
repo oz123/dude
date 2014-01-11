@@ -1,12 +1,11 @@
 # quickly setup bindings for x-tile in mate, tiling window
 # management with a nice DE!
 
-# dconf load /org/mate/desktop/keybindings/ < this_file
 # Thanks for mate developers  Issue #45 in mate-control-center
 # is now closed and this is possible again
 
 
-
+cat << EOF > /tmp/keys
 [custom6]
 action='x-tile q'
 binding='<Primary><Alt>q'
@@ -46,3 +45,7 @@ name='tile down'
 action='x-tile l'
 binding='<Alt><Mod4>3'
 name='tile right 3'
+EOF
+
+dconf load /org/mate/desktop/keybindings/ < /tmp/keys
+rm /tmp/keys
