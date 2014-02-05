@@ -409,3 +409,6 @@ set tabstop=4 softtabstop=4 shiftwidth=4
 " convert tabs to spaces before writing file
 autocmd! bufwritepre *.py set expandtab | retab! 4
 
+set clipboard=unnamedplus
+" hight background when lines are longer
+let &colorcolumn=join(range(81,999),",")
