@@ -17,7 +17,10 @@ if has("gui_running")
         endif
         set background=light
         set lines=35 columns=120
-    endif
+        " enable y and p from X11 clipboad
+        " CTL+V on GTK application will paste stuff coppied with y
+        set clipboard=unnamedplus
+   endif
 else
     set term=xterm-256color
     "set term=screen-256color
