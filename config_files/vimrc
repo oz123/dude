@@ -136,8 +136,6 @@ Bundle 'majutsushi/tagbar'
 Bundle 'kien/ctrlp.vim'
 " Zen coding
 Bundle 'mattn/zencoding-vim'
-" Git integration
-Bundle 'motemen/git-vim'
 " Tab list panel
 Bundle 'kien/tabman.vim'
 " Powerline
@@ -161,6 +159,7 @@ Bundle 'klen/python-mode'
 Bundle 'scrooloose/syntastic'
 Bundle 'guns/xterm-color-table.vim'
 "Bundle 'Shougo/neocomplete.vim'
+Bundle 'git://repo.or.cz/vcscommand.git'
 
 filetype plugin on
 filetype indent on
