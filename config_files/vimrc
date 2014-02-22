@@ -415,3 +415,8 @@ autocmd! bufwritepre *.py set expandtab | retab! 4
 set clipboard=unnamedplus
 " hight background when lines are longer
 let &colorcolumn=join(range(81,999),",")
+
+if  bufname("%")=="COMMIT_EDITMSG"
+    set spell 
+    set spelllang=en 
+endif
