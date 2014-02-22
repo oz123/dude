@@ -177,6 +177,10 @@ branch="["$branch"]"
     fi
     # prompt $ or # for root
     PS1+="\$ "
+
+   if [ ! -z $VIRTUAL_ENV  ]; then
+      PS1="(`basename \"$VIRTUAL_ENV\"`)$PS1"
+   fi 
 }
 PROMPT_COMMAND=__prompt_command
 
@@ -198,5 +202,5 @@ if ! shopt -oq posix; then
 fi
 
 if [ -f .bash_alias ]; then
-    bash_alias 
+   source .bash_alias 
 fi
