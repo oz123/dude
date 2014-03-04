@@ -77,12 +77,7 @@ set pastetoggle=<F2>
 "map <F12> :new \| r!pylint #<cr><cr>
 "map <F12> :new \| r!pylint #<cr><cr>
 map <F11> :set filetype=python <cr>
-map <F10> :call Pylint(1)<cr>
-map <F9> :!sci -T %<cr><cr>
 
-"let tlist_python_settings = 'python;n:namespace;v:variables;d:macro;t:typedef;c:CLASSES;m:MEMBERS;f:Functions;p:PROPERTIES;l:GLOBALS'
-
-au FileType python set omnifunc=pythoncomplete#Complete
 
 " Author: Nick Anderson <nick at anders0n.net>
 " Website: http://www.cmdln.org
@@ -319,9 +314,8 @@ nmap ,wr :RecurGrepFast <cword><CR>
 " don't show lint result every time we save a file
 let g:pymode_lint_write = 0
 " run pep8+pyflakes+pylint validator with \8
-autocmd FileType python map <buffer> <leader>8 :PyLint<CR>
 " rules to ignore (example: "E501,W293")
-let g:pymode_lint_ignore = ""
+let g:pymode_lint_ignore = "E501"
 " don't add extra column for error icons (on console vim creates a 2-char-wide
 " extra column)
 let g:pymode_lint_signs = 0
@@ -333,9 +327,6 @@ let g:pymode_rope = 0
 " rope (from python-mode) settings
 nmap ,d :RopeGotoDefinition<CR>
 nmap ,o :RopeFindOccurrences<CR>
-
-" don't let pyflakes allways override the quickfix list
-let g:pyflakes_use_quickfix = 0
 
 " tabman shortcuts
 let g:tabman_toggle = 'tl'
@@ -356,12 +347,13 @@ let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 " patched font (more info on the README.rst)
 
 " based on https://github.com/fisadev/fisa-vim-config
+let g:pymode_lint_write = 0
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_loc_list_height=4
-let g:syntastic_python_checkers=['flake8', 'pyflakes']
+let g:syntastic_python_checkers=['flake8']
+let g:syntastic_python_flake8_args = "--ignore=E501 --max-complexity 10"
 let g:syntastic_warning_symbol = 'ww'
-
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
 " let g:Powerline_symbols = 'fancy'
@@ -384,7 +376,6 @@ else
 endif
 
 let g:tagbar_ctags_bin="/usr/bin/ctags" 
-map <F11> :set filetype=python <cr>
 let g:NERDTreeDirArrows=0
 
 set autochdir
