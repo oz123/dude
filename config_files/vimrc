@@ -32,7 +32,7 @@ set bs=indent,eol,start		" allow backspacing over everything in insert mode
 set ai			" always set autoindenting on
 "set backup		" keep a backup file
 set viminfo='20,\"50	" read/write a .viminfo file, don't store more
-			" than 50 lines of registers
+            " than 50 lines of registers
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 
@@ -40,7 +40,6 @@ set shortmess=filnxtToOI
 set noea
 set scs
 set nu
-set dict=/home/oznahum/.vim/allwords
 set expandtab
 set autoindent
 set history=50
@@ -83,6 +82,12 @@ map <F11> :set filetype=python <cr>
 " Website: http://www.cmdln.org
 " Adapted from sonteks post on Vim as Python IDE
 " http://blog.sontek.net/2008/05/11/python-with-a-modular-ide-vim/
+
+
+" to activate vundle
+" $ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+"
+"
 
 filetype off                   " required!
 
@@ -160,6 +165,9 @@ Bundle 'guns/xterm-color-table.vim'
 Bundle 'git://repo.or.cz/vcscommand.git'
 Bundle 'int3/vim-extradite'
 Bundle 'airblade/vim-gitgutter'
+Bundle 'buztard/vim-nomad'
+Bundle 't9md/vim-choosewin'
+
 
 filetype plugin on
 filetype indent on
@@ -430,3 +438,5 @@ highlight link GitGutterAdd DiffAdd
 highlight link GitGutterChange DiffAdd
 highlight link GitGutterDelete DiffAdd
 highlight link GitGutterChangeDelete DiffAdd
+" mapping for choosing win tmux style
+nmap - <Plug>(choosewin)
