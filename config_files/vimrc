@@ -86,6 +86,9 @@ map <F11> :set filetype=python <cr>
 
 filetype off                   " required!
 
+" do this to enable vundle
+" $ git clone https://github.com/gmarik/vundle.git \
+"   ~/.vim/bundle/vundle
  set rtp+=~/.vim/bundle/vundle/
  call vundle#rc()
 
@@ -156,6 +159,7 @@ Bundle 'guns/xterm-color-table.vim'
 "Bundle 'Shougo/neocomplete.vim'
 Bundle 'git://repo.or.cz/vcscommand.git'
 Bundle 'int3/vim-extradite'
+Bundle 'airblade/vim-gitgutter'
 
 filetype plugin on
 filetype indent on
@@ -415,3 +419,14 @@ endif
 
 " highlight cursor line 
 set cursorline
+
+let g:gitgutter_sign_added = '+'
+let g:gitgutter_sign_modified = '*'
+let g:gitgutter_sign_removed = '-'
+let g:gitgutter_sign_modified_removed = '+-'
+
+highlight SignColumn ctermfg=6 guifg=#93a1a1 guibg=#eee8d5
+highlight link GitGutterAdd DiffAdd
+highlight link GitGutterChange DiffAdd
+highlight link GitGutterDelete DiffAdd
+highlight link GitGutterChangeDelete DiffAdd
