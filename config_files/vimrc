@@ -73,8 +73,6 @@ autocmd BufRead * set go+=b
 "highlight SpellLocal term=undercurl cterm=undercurl
 
 set pastetoggle=<F2>
-"map <F12> :new \| r!pylint #<cr><cr>
-"map <F12> :new \| r!pylint #<cr><cr>
 map <F11> :set filetype=python <cr>
 
 
@@ -167,7 +165,7 @@ Bundle 'int3/vim-extradite'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'buztard/vim-nomad'
 Bundle 't9md/vim-choosewin'
-
+Bundle 'andviro/flake8-vim'
 
 filetype plugin on
 filetype indent on
@@ -355,9 +353,12 @@ set wildmode=list:longest
 " Fix to let ESC work as espected with Autoclose plugin
 let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 
+" have PyFlake silence, we use syntastic ...
+let g:PyFlakeOnWrite = 0
+
+
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
-
 " based on https://github.com/fisadev/fisa-vim-config
 let g:pymode_lint_write = 0
 let g:syntastic_always_populate_loc_list=1
