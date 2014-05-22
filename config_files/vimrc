@@ -402,7 +402,7 @@ let g:syntastic_c_no_default_include_dirs = 1
 let g:syntastic_c_remove_include_errors = 1
 if has("autocmd")
     au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
-    au FileType python           set makeprg=python\ %
+    au FileType python           set makeprg=python\ % | set autowrite
 endif 
 
 " options for neocomplete
