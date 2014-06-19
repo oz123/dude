@@ -161,13 +161,13 @@ Bundle 'klen/python-mode'
 "Bundle 'joonty/vdebug.git'
 Bundle 'scrooloose/syntastic'
 Bundle 'guns/xterm-color-table.vim'
-"Bundle 'Shougo/neocomplete.vim'
+Bundle 'Shougo/neocomplete.vim'
 Bundle 'git://repo.or.cz/vcscommand.git'
 Bundle 'int3/vim-extradite'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'buztard/vim-nomad'
 Bundle 't9md/vim-choosewin'
-
+Bundle 'yegappan/mru'
 
 filetype plugin on
 filetype indent on
@@ -206,6 +206,8 @@ let g:tagbar_autofocus = 1
 map <F3> :NERDTreeToggle<CR>
 "map <F3>  :CommandT <CR>
 
+nnoremap <silent> <Leader>t :CommandT<CR>
+nnoremap <silent> <Leader>b :CommandTBuffer<CR>
 " tab navigation
 map tn :tabn<CR>
 map tp :tabp<CR>
