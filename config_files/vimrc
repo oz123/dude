@@ -73,8 +73,6 @@ autocmd BufRead * set go+=b
 "highlight SpellLocal term=undercurl cterm=undercurl
 
 set pastetoggle=<F2>
-"map <F12> :new \| r!pylint #<cr><cr>
-"map <F12> :new \| r!pylint #<cr><cr>
 map <F11> :set filetype=python <cr>
 
 
@@ -168,6 +166,7 @@ Bundle 'airblade/vim-gitgutter'
 Bundle 'buztard/vim-nomad'
 Bundle 't9md/vim-choosewin'
 Bundle 'yegappan/mru'
+Bundle 'andviro/flake8-vim'
 
 filetype plugin on
 filetype indent on
@@ -357,9 +356,12 @@ set wildmode=list:longest
 " Fix to let ESC work as espected with Autoclose plugin
 let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
 
+" have PyFlake silence, we use syntastic ...
+let g:PyFlakeOnWrite = 0
+
+
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
-
 " based on https://github.com/fisadev/fisa-vim-config
 let g:pymode_lint_write = 0
 let g:syntastic_always_populate_loc_list=1
@@ -402,7 +404,8 @@ let g:syntastic_c_include_dirs = ['/home/ozdeb/software/cofre/3rd_party/iniparse
 let g:syntastic_c_no_default_include_dirs = 1
 let g:syntastic_c_remove_include_errors = 1
 if has("autocmd")
-    au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/include
+    au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
+    au FileType python           set makeprg=python\ %
 endif 
 
 " options for neocomplete
