@@ -167,6 +167,8 @@ Bundle 'buztard/vim-nomad'
 Bundle 't9md/vim-choosewin'
 Bundle 'yegappan/mru'
 Bundle 'andviro/flake8-vim'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
 
 filetype plugin on
 filetype indent on
@@ -406,6 +408,7 @@ let g:syntastic_c_remove_include_errors = 1
 if has("autocmd")
     au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
     au FileType python           set makeprg=python\ %
+    au FileType java             set background=light | set  t_Co=256 | colorscheme zellner 
 endif 
 
 " options for neocomplete
