@@ -81,27 +81,25 @@ map <F11> :set filetype=python <cr>
 " Adapted from sonteks post on Vim as Python IDE
 " http://blog.sontek.net/2008/05/11/python-with-a-modular-ide-vim/
 
-
 " to activate vundle
 " $ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 "
 "
-
 filetype off                   " required!
 
 " do this to enable vundle
-" $ git clone https://github.com/gmarik/vundle.git \
-"   ~/.vim/bundle/vundle
- set rtp+=~/.vim/bundle/vundle/
- call vundle#rc()
+" $ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
- " let Vundle manage Vundle
- " required! 
-Bundle 'gmarik/vundle'
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
- " My Bundles here:
- "
- " original repos on github
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+" Track the engine.
+Plugin 'SirVer/ultisnips'
+" Snippets are separated from the engine. Add this if you want them:
+Plugin 'honza/vim-snippets'
+"
 Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
@@ -172,21 +170,19 @@ Bundle 'vim-scripts/SQLComplete.vim'
 Bundle 'chrisbra/csv.vim'
 
 
-filetype plugin on
-filetype indent on
-filetype on 
-syntax on
 
-" tabs and spaces handling
-set expandtab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+call vundle#end()            " required
+filetype plugin indent on    " required
 
-" tablength exceptions
-autocmd FileType html setlocal shiftwidth=2 tabstop=2
-autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2
-autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<c-b>'
+let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+set runtimepath+=~.vim/bundle/vim-snippets/UltiSnips/
+
 
 " always show status bar
 set ls=2
@@ -407,11 +403,21 @@ let g:syntastic_c_no_include_search = 1
 let g:syntastic_c_include_dirs = ['/home/ozdeb/software/cofre/3rd_party/iniparser/src/',]
 let g:syntastic_c_no_default_include_dirs = 1
 let g:syntastic_c_remove_include_errors = 1
+
 if has("autocmd")
     au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
-    au FileType python           set makeprg=python\ % | set autowrite  | set foldmethod=indent
+    au FileType python           set makeprg=python\ % | set autowrite  | set foldmethod=indent 
 endif 
 
+" tabs and spaces handling
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+" tablength exceptions
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 
 set foldlevelstart=20
 " options for neocomplete
