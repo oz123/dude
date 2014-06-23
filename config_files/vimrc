@@ -166,6 +166,10 @@ Bundle 'airblade/vim-gitgutter'
 Bundle 'buztard/vim-nomad'
 Bundle 't9md/vim-choosewin'
 Bundle 'andviro/flake8-vim'
+" SQLComplete 
+Bundle 'vim-scripts/SQLComplete.vim'
+Bundle 'chrisbra/csv.vim'
+
 
 filetype plugin on
 filetype indent on
@@ -325,7 +329,7 @@ nmap ,wr :RecurGrepFast <cword><CR>
 let g:pymode_lint_write = 0
 " run pep8+pyflakes+pylint validator with \8
 " rules to ignore (example: "E501,W293")
-let g:pymode_lint_ignore = "E501"
+" let g:pymode_lint_ignore = "E501"
 " don't add extra column for error icons (on console vim creates a 2-char-wide
 " extra column)
 let g:pymode_lint_signs = 0
@@ -365,7 +369,7 @@ let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_loc_list_height=4
 let g:syntastic_python_checkers=['flake8']
-let g:syntastic_python_flake8_args = "--ignore=E501 --max-complexity 10"
+let g:syntastic_python_flake8_args = "--select=F --max-complexity 10"
 let g:syntastic_warning_symbol = 'ww'
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
@@ -402,9 +406,11 @@ let g:syntastic_c_no_default_include_dirs = 1
 let g:syntastic_c_remove_include_errors = 1
 if has("autocmd")
     au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
-    au FileType python           set makeprg=python\ % | set autowrite
+    au FileType python           set makeprg=python\ % | set autowrite  | set foldmethod=indent
 endif 
 
+
+set foldlevelstart=20
 " options for neocomplete
 "let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
