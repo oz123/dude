@@ -61,49 +61,23 @@ autocmd BufRead *.py set tabstop=4
 autocmd BufRead * set nowrap
 autocmd BufRead * set go+=b
 
-"make nice spelling 
-"setlocal spell spelllang=en_us
-"highlight clear SpellBad
-"highlight SpellBad term=standout ctermfg=1 term=undercurl cterm=undercurl
-"highlight clear SpellCap
-"highlight SpellCap term=undercurl cterm=undercurl
-"highlight clear SpellRare
-"highlight SpellRare term=undercurl cterm=undercurl
-"highlight clear SpellLocal
-"highlight SpellLocal term=undercurl cterm=undercurl
 
 set pastetoggle=<F2>
 map <F11> :set filetype=python <cr>
 
-
-" Author: Nick Anderson <nick at anders0n.net>
-" Website: http://www.cmdln.org
-" Adapted from sonteks post on Vim as Python IDE
-" http://blog.sontek.net/2008/05/11/python-with-a-modular-ide-vim/
-
-" to activate vundle
-" $ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-"
-"
-filetype off                   " required!
-
-" do this to enable vundle
-" $ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-
+set nocompatible              " be iMproved, required
+filetype off                  " required
+" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-" Track the engine.
-Plugin 'SirVer/ultisnips'
-" Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
-"
+" My Bundles here:
 Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle 'tpope/vim-rails.git'
 " vim-scripts repos
 Bundle 'L9'
 Bundle 'FuzzyFinder'
@@ -113,7 +87,7 @@ Bundle 'altercation/vim-colors-solarized'
 " Autocompletion
 Bundle 'AutoComplPop'
 " Python code checker
-" Bundle 'pyflakes.vim'
+Bundle 'pyflakes.vim'
 " Search results counter
 Bundle 'IndexedSearch'
 " XML/HTML tags navigation
@@ -122,7 +96,6 @@ Bundle 'matchit.zip'
 Bundle 'Wombat'
 " Yank history navigation
 Bundle 'YankRing.vim'
-" ...
 " Python and PHP Debugger
 "Bundle 'fisadev/vim-debug.vim'
 " Better file browser
@@ -153,7 +126,7 @@ Bundle 'Townk/vim-autoclose'
 Bundle 'michaeljsmith/vim-indent-object'
 " Python mode (indentation, doc, refactor, lints, code checking, motion and
 " operators, highlighting, run and ipdb breakpoints)
-Bundle 'klen/python-mode'
+" Bundle 'klen/python-mode'
 "Bundle 'joonty/vdebug.git'
 Bundle 'scrooloose/syntastic'
 Bundle 'guns/xterm-color-table.vim'
@@ -168,11 +141,27 @@ Bundle 'andviro/flake8-vim'
 " SQLComplete 
 Bundle 'vim-scripts/SQLComplete.vim'
 Bundle 'chrisbra/csv.vim'
-
-
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'tpope/eunuch'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
+
+syntax on
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-s>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+" tabs and spaces handling
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 
 let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<c-b>'
@@ -234,11 +223,6 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 " old autocomplete keyboard shortcut
 imap <C-J> <C-X><C-O>
 
-" show pending tasks list
-"map <F2> :TaskList<CR>
-
-" save as sudo
-ca w!! w !sudo tee "%"
 
 " colors and settings of autocompletion
 "highlight Pmenu ctermbg=4 guibg=LightGray
@@ -246,36 +230,6 @@ ca w!! w !sudo tee "%"
 " highlight PmenuSbar ctermbg=7 guibg=DarkGray
 " highlight PmenuThumb guibg=Black
 " use global scope search
-let OmniCpp_GlobalScopeSearch = 1
-" 0 = namespaces disabled
-" 1 = search namespaces in the current buffer
-" 2 = search namespaces in the current buffer and in included files
-let OmniCpp_NamespaceSearch = 2
-" 0 = auto
-" 1 = always show all members
-let OmniCpp_DisplayMode = 1
-" 0 = don't show scope in abbreviation
-" 1 = show scope in abbreviation and remove the last column
-let OmniCpp_ShowScopeInAbbr = 0
-" This option allows to display the prototype of a function in the abbreviation part of the popup menu.
-" 0 = don't display prototype in abbreviation
-" 1 = display prototype in abbreviation
-let OmniCpp_ShowPrototypeInAbbr = 1
-" This option allows to show/hide the access information ('+', '#', '-') in the popup menu.
-" 0 = hide access
-" 1 = show access
-let OmniCpp_ShowAccess = 1
-" This option can be use if you don't want to parse using namespace declarations in included files and want to add
-" namespaces that are always used in your project.
-let OmniCpp_DefaultNamespaces = ["std"]
-" Complete Behaviour
-let OmniCpp_MayCompleteDot = 0
-let OmniCpp_MayCompleteArrow = 0
-let OmniCpp_MayCompleteScope = 0
-" When 'completeopt' does not contain "longest", Vim automatically select the first entry of the popup menu. You can
-" change this behaviour with the OmniCpp_SelectFirstItem option.
-let OmniCpp_SelectFirstItem = 0
-
 " debugger keyboard shortcuts
 map <F5> :Dbg over<CR>
 map <F6> :Dbg into<CR>
@@ -407,6 +361,7 @@ let g:syntastic_c_remove_include_errors = 1
 if has("autocmd")
     au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
     au FileType python           set makeprg=python\ % | set autowrite  | set foldmethod=indent 
+    au FileType java             set background=light | set  t_Co=256 | colorscheme zellner 
 endif 
 
 " tabs and spaces handling
@@ -457,3 +412,13 @@ highlight link GitGutterDelete DiffAdd
 highlight link GitGutterChangeDelete DiffAdd
 " mapping for choosing win tmux style
 nmap - <Plug>(choosewin)
+"make nice spelling 
+"setlocal spell spelllang=en_us
+"highlight clear SpellBad
+"highlight SpellBad term=standout ctermfg=1 term=undercurl cterm=undercurl
+"highlight clear SpellCap
+"highlight SpellCap term=undercurl cterm=undercurl
+"highlight clear SpellRare
+"highlight SpellRare term=undercurl cterm=undercurl
+"highlight clear SpellLocal
+"highlight SpellLocal term=undercurl cterm=undercurl

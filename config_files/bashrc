@@ -204,3 +204,8 @@ fi
 if [ -f .bash_alias ]; then
    source .bash_alias 
 fi
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Software
+source /usr/local/bin/virtualenvwrapper.sh
+
