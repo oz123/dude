@@ -87,7 +87,7 @@ Bundle 'altercation/vim-colors-solarized'
 " Autocompletion
 Bundle 'AutoComplPop'
 " Python code checker
-Bundle 'pyflakes.vim'
+" Bundle 'pyflakes.vim'
 " Search results counter
 Bundle 'IndexedSearch'
 " XML/HTML tags navigation
@@ -126,7 +126,7 @@ Bundle 'Townk/vim-autoclose'
 Bundle 'michaeljsmith/vim-indent-object'
 " Python mode (indentation, doc, refactor, lints, code checking, motion and
 " operators, highlighting, run and ipdb breakpoints)
-" Bundle 'klen/python-mode'
+Bundle 'klen/python-mode' 
 "Bundle 'joonty/vdebug.git'
 Bundle 'scrooloose/syntastic'
 Bundle 'guns/xterm-color-table.vim'
@@ -143,7 +143,8 @@ Bundle 'vim-scripts/SQLComplete.vim'
 Bundle 'chrisbra/csv.vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'tpope/eunuch'
+Plugin 'tpope/vim-eunuch'
+Plugin 'kien/rainbow_parentheses.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -154,7 +155,6 @@ syntax on
 let g:UltiSnipsExpandTrigger="<c-s>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 " tabs and spaces handling
@@ -163,9 +163,9 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
-let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-b>'
-let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+let g:UltiSnipsExpandTrigger='<c-a>'
+let g:UltiSnipsJumpForwardTrigger='<c-j>'
+let g:UltiSnipsJumpBackwardTrigger='<c-k>'
 "
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
@@ -412,6 +412,12 @@ highlight link GitGutterDelete DiffAdd
 highlight link GitGutterChangeDelete DiffAdd
 " mapping for choosing win tmux style
 nmap - <Plug>(choosewin)
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
 "make nice spelling 
 "setlocal spell spelllang=en_us
 "highlight clear SpellBad
