@@ -126,7 +126,7 @@ Bundle 'Townk/vim-autoclose'
 Bundle 'michaeljsmith/vim-indent-object'
 " Python mode (indentation, doc, refactor, lints, code checking, motion and
 " operators, highlighting, run and ipdb breakpoints)
-" Bundle 'klen/python-mode'
+Bundle 'klen/python-mode'
 "Bundle 'joonty/vdebug.git'
 Bundle 'scrooloose/syntastic'
 Bundle 'guns/xterm-color-table.vim'
@@ -140,8 +140,8 @@ Bundle 'yegappan/mru'
 Bundle 'andviro/flake8-vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'tpope/eunuch'
-
+Plugin 'tpope/vim-eunuch'
+Plugin 'python-rope/ropevim'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
@@ -309,12 +309,12 @@ let g:PyFlakeOnWrite = 0
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
 " based on https://github.com/fisadev/fisa-vim-config
-let g:pymode_lint_write = 0
+let g:pymode_lint_write = 1
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_loc_list_height=4
 let g:syntastic_python_checkers=['flake8']
-let g:syntastic_python_flake8_args = "--ignore=E501 --max-complexity 10"
+"let g:syntastic_python_flake8_args = "--ignore=E501 --max-complexity 10"
 let g:syntastic_warning_symbol = 'ww'
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
@@ -350,9 +350,9 @@ let g:syntastic_c_include_dirs = ['/home/ozdeb/software/cofre/3rd_party/iniparse
 let g:syntastic_c_no_default_include_dirs = 1
 let g:syntastic_c_remove_include_errors = 1
 if has("autocmd")
-    au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
-    au FileType python           set makeprg=python\ %
-    au FileType java             set background=light | set  t_Co=256 | colorscheme zellner 
+    au FileType c,cpp   setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
+    au FileType python  set makeprg=python\ % | set foldmethod=indent | set foldlevelstart=99 | set foldlevel=99
+    au FileType java    set background=light | set  t_Co=256 | colorscheme zellner 
 endif 
 
 " options for neocomplete
