@@ -87,7 +87,7 @@ Bundle 'altercation/vim-colors-solarized'
 " Autocompletion
 Bundle 'AutoComplPop'
 " Python code checker
-Bundle 'pyflakes.vim'
+" Bundle 'pyflakes.vim'
 " Search results counter
 Bundle 'IndexedSearch'
 " XML/HTML tags navigation
@@ -107,7 +107,7 @@ Bundle 'majutsushi/tagbar'
 " Code and files fuzzy finder
 Bundle 'kien/ctrlp.vim'
 " Zen coding
-Bundle 'mattn/zencoding-vim'
+Bundle 'mattn/emmet-vim'
 " Tab list panel
 Bundle 'kien/tabman.vim'
 " Powerline
@@ -126,7 +126,7 @@ Bundle 'Townk/vim-autoclose'
 Bundle 'michaeljsmith/vim-indent-object'
 " Python mode (indentation, doc, refactor, lints, code checking, motion and
 " operators, highlighting, run and ipdb breakpoints)
-Bundle 'klen/python-mode'
+Bundle 'klen/python-mode' 
 "Bundle 'joonty/vdebug.git'
 Bundle 'scrooloose/syntastic'
 Bundle 'guns/xterm-color-table.vim'
@@ -138,10 +138,15 @@ Bundle 'buztard/vim-nomad'
 Bundle 't9md/vim-choosewin'
 Bundle 'yegappan/mru'
 Bundle 'andviro/flake8-vim'
+" SQLComplete 
+Bundle 'vim-scripts/SQLComplete.vim'
+Bundle 'chrisbra/csv.vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-eunuch'
 Plugin 'python-rope/ropevim'
+Plugin 'kien/rainbow_parentheses.vim'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 
@@ -151,7 +156,6 @@ syntax on
 let g:UltiSnipsExpandTrigger="<c-s>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 " tabs and spaces handling
@@ -160,10 +164,15 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
-" tablength exceptions
-autocmd FileType html setlocal shiftwidth=2 tabstop=2
-autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2
-autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+let g:UltiSnipsExpandTrigger='<c-a>'
+let g:UltiSnipsJumpForwardTrigger='<c-j>'
+let g:UltiSnipsJumpBackwardTrigger='<c-k>'
+"
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+set runtimepath+=~.vim/bundle/vim-snippets/UltiSnips/
+
 
 " always show status bar
 set ls=2
@@ -274,7 +283,7 @@ nmap ,wr :RecurGrepFast <cword><CR>
 let g:pymode_lint_write = 0
 " run pep8+pyflakes+pylint validator with \8
 " rules to ignore (example: "E501,W293")
-let g:pymode_lint_ignore = "E501"
+" let g:pymode_lint_ignore = "E501"
 " don't add extra column for error icons (on console vim creates a 2-char-wide
 " extra column)
 let g:pymode_lint_signs = 0
@@ -349,12 +358,24 @@ let g:syntastic_c_no_include_search = 1
 let g:syntastic_c_include_dirs = ['/home/ozdeb/software/cofre/3rd_party/iniparser/src/',]
 let g:syntastic_c_no_default_include_dirs = 1
 let g:syntastic_c_remove_include_errors = 1
+
 if has("autocmd")
     au FileType c,cpp   setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
     au FileType python  set makeprg=python\ % | set foldmethod=indent | set foldlevelstart=99 | set foldlevel=99
     au FileType java    set background=light | set  t_Co=256 | colorscheme zellner 
 endif 
 
+" tabs and spaces handling
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+" tablength exceptions
+autocmd FileType html setlocal shiftwidth=2 tabstop=2
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+
+set foldlevelstart=20
 " options for neocomplete
 "let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
@@ -392,6 +413,12 @@ highlight link GitGutterDelete DiffAdd
 highlight link GitGutterChangeDelete DiffAdd
 " mapping for choosing win tmux style
 nmap - <Plug>(choosewin)
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
 "make nice spelling 
 "setlocal spell spelllang=en_us
 "highlight clear SpellBad
