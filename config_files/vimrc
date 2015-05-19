@@ -145,6 +145,11 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-eunuch'
 Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'alem0lars/vim-colorscheme-darcula'
+Plugin 'Z1MM32M4N/vim-superman'
+Plugin 'saltstack/salt-vim'
+Plugin 'Glench/Vim-Jinja2-Syntax'
+Plugin 'vim-scripts/crontab.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -329,13 +334,14 @@ let g:syntastic_warning_symbol = 'ww'
 " let g:Powerline_symbols = 'fancy'
 
 
-if has("gui_running")
-   set background=light
-   colorscheme solarized
-else 
-    set background=dark
-    set  t_Co=256
-    colorscheme desert 
+colorscheme darcula
+"if has("gui_running")
+"   set background=light
+"   colorscheme solarized
+"else 
+"    set background=dark
+set  t_Co=256
+"    colorscheme desert 
     "colorscheme solarized
     "let g:solarized_termcolors=256
     "hi TabLineSel ctermfg=Blue ctermbg=Yellow
@@ -343,7 +349,7 @@ else
     "highlight PmenuSel ctermfg=120 ctermbg=0
     "highlight Normal ctermfg=grey ctermbg=LightGray
     "highlight Normal ctermfg=grey ctermbg=darkblue
-endif
+"endif
 
 let g:tagbar_ctags_bin="/usr/bin/ctags" 
 let g:NERDTreeDirArrows=0
@@ -354,14 +360,15 @@ autocmd! bufreadpost *.pas set softtabstop=2
 
 let g:syntastic_c_check_header = 0
 let g:syntastic_c_no_include_search = 1
-let g:syntastic_c_include_dirs = ['/home/ozdeb/software/cofre/3rd_party/iniparser/src/',]
-let g:syntastic_c_no_default_include_dirs = 1
+let g:syntastic_c_include_dirs = ['/usr/include/libmongoc-1.0','/usr/include/libbson-1.0/']
+let g:syntastic_c_no_default_include_dirs = 0
 let g:syntastic_c_remove_include_errors = 1
 
 if has("autocmd")
-    au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included
+    au FileType c,cpp            setl cindent tw=79 path=.,/usr/include,/usr/local/include,/usr/lib/gcc/*/*/included, foldmethod=syntax
     au FileType python           set makeprg=python\ % | set autowrite  | set foldmethod=indent 
     au FileType java             set background=light | set  t_Co=256 | colorscheme zellner 
+    au BufRead,BufNewFile *.sls  set filetype=yaml
 endif 
 
 " tabs and spaces handling
@@ -417,6 +424,9 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+"let g:sls_use_jinja_syntax = 1
+
 
 "make nice spelling 
 "setlocal spell spelllang=en_us
