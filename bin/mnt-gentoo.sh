@@ -3,7 +3,9 @@
 # we still have lot's of work to do ...
 
 # mount everything needed for a working chroot
+set -e
 function mount_all(){
+	echo $1
 	mount $1 /mnt/gentoo
 	mount -t proc proc /mnt/gentoo/proc
 	mount --rbind /sys /mnt/gentoo/sys
@@ -40,4 +42,6 @@ if [ ! -d /mnt/gentoo ]; then
 	mkdir /mnt/gentoo
 fi
 
-chroot /mnt/gentoo/ /bin/bash --rcfile /.bashrc && unmount_all $1
+mount_all $1
+chroot /mnt/gentoo/ /bin/bash --rcfile /.bashrc 
+unmount_all $1
