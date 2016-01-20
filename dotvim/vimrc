@@ -1,27 +1,3 @@
-if has("gui_running")
-   if has("gui_gtk2")
-        set guioptions-=T  "remove toolbar
-        let dsm=system('fc-list | grep -c Droid\ Sans\ Mono')
-        let cons=system('fc-list | grep -c Inconsola')
-        if ( dsm > 0)
-           set gfn=Droid\ Sans\ Mono\ 10
-        elseif ( cons > 0)
-           set gfn=Inconsolata\ 12
-        else 
-           set gfn=Monospace\ 10
-        endif
-        set background=light
-        set lines=35 columns=120
-        " enable y and p from X11 clipboad
-        " CTL+V on GTK application will paste stuff coppied with y
-        set clipboard=unnamedplus
-   endif
-else
-    set term=xterm-256color
-    "set term=screen-256color
-    set t_Co=256
-endif
-
 set nocompatible	" Use Vim defaults (much better!)
 set bs=indent,eol,start " allow backspacing over everything in insert mode
 set ai			" always set autoindenting on
@@ -50,7 +26,7 @@ Plug 'altercation/vim-colors-solarized'
 " " Better file browser
 Plug 'scrooloose/nerdtree'
 " Code commenter
-"Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdcommenter'
 " Class/module browser
 Plug 'majutsushi/tagbar'
 " Code and files fuzzy finder
@@ -68,9 +44,9 @@ Plug 'majutsushi/tagbar'
 "Plug 'tpope/vim-surround'
 " Indent text object
 "Plug 'michaeljsmith/vim-indent-object'
-"Plug 'klen/python-mode' 
+"Plug 'klen/python-mode'
 "Plug 'joonty/vdebug.git'
-"Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 "Plug 'guns/xterm-color-table.vim'
 "Plug 'Shougo/neocomplete.vim'
 ""Plug 'git://repo.or.cz/vcscommand.git'
@@ -79,18 +55,21 @@ Plug 'airblade/vim-gitgutter'
 Plug 'buztard/vim-nomad'
 Plug 't9md/vim-choosewin'
 Plug 'yegappan/mru'
-"Plug 'andviro/flake8-vim'
-" SQLComplete 
+Plug 'andviro/flake8-vim'
+" SQLComplete
 "Plug 'vim-scripts/SQLComplete.vim'
 Plug 'chrisbra/csv.vim'
 "Plug 'SirVer/ultisnips'
 "Plug 'honza/vim-snippets'
-"Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-eunuch'
 "Plug 'python-rope/ropevim'
 "Plug 'kien/rainbow_parentheses.vim'
 Plug 'bling/vim-airline'
 Plug 'luochen1990/rainbow'
-"Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'majutsushi/tagbar'
+Plug 'sorin-ionescu/vim-htmlvalidator'
+Plug 'davidhalter/jedi-vim'
 "
 call plug#end()
 "
@@ -106,31 +85,33 @@ set hlsearch
 set nu
 "
 " toggle Tagbar display
-"map <F4> :TagbarToggle<CR>
+map <F4> :TagbarToggle<CR>
 " autofocus on Tagbar open
-"let g:tagbar_autofocus = 1
+let g:tagbar_autofocus = 1
 "
 " NERDTree (better file browser) toggle
-"map <F3> :NERDTreeToggle<CR>
+map <F3> :NERDTreeToggle<CR>
+map tbd :set background=dark<CR>
+map tbl :set background=light<CR>
 " Ignore files on NERDTree
 "let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
 "
 " tab navigation
 "map tn :tabn<CR>
 "map tp :tabp<CR>
-"map tm :tabm 
-"map tt :tabnew 
+"map tm :tabm
+"map tt :tabnew
 "
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
 " based on https://github.com/fisadev/fisa-vim-config
 "let g:pymode_lint_write = 1
-"let g:syntastic_always_populate_loc_list=1
-"let g:syntastic_auto_loc_list=1
-"let g:syntastic_loc_list_height=4
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_loc_list_height=4
 "let g:syntastic_python_checkers=['flake8']
 "let g:syntastic_python_flake8_args = "--ignore=E501 --max-complexity 10"
-"let g:syntastic_warning_symbol = 'ww'
+let g:syntastic_warning_symbol = 'ww'
 " to use fancy symbols for powerline, uncomment the following line and use a
 " patched font (more info on the README.rst)
 " let g:Powerline_symbols = 'fancy'
@@ -138,7 +119,7 @@ set nu
 "
 "" tablength exceptions
 "autocmd FileType html setlocal shiftwidth=2 tabstop=2
-"autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2
+autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2
 "autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 ""autocmd FileType c setlocal shiftwidth=2 tabstop=2 foldmethod=syntax
 "
@@ -146,14 +127,14 @@ set nu
 " hight background when lines are longer
 let &colorcolumn=join(range(81,999),",")
 "
-" force spell when doing a git commit 
+" force spell when doing a git commit
 if  bufname("%")=="COMMIT_EDITMSG"
-    set spell 
-    set spelllang=en 
+    set spell
+    set spelllang=en
 endif
 "
 "0 if you want to enable it later via :RainbowToggle
-let g:rainbow_active = 1 
+let g:rainbow_active = 1
 filetype plugin on
 
 "Activation based on file type
@@ -161,3 +142,31 @@ filetype plugin on
 "  autocmd!
 "  autocmd FileType * RainbowParentheses
 "augroup END
+
+if has("gui_running")
+   if has("gui_gtk2")
+        set guioptions-=T  "remove toolbar
+        let dsm=system('fc-list | grep -c Droid\ Sans\ Mono')
+        let cons=system('fc-list | grep -c Inconsola')
+        if ( dsm > 0)
+           set gfn=Droid\ Sans\ Mono\ 10
+        elseif ( cons > 0)
+           set gfn=Inconsolata\ 12
+        else
+           set gfn=Monospace\ 10
+        endif
+        set background=light
+        set lines=35 columns=120
+        " enable y and p from X11 clipboad
+        " CTL+V on GTK application will paste stuff coppied with y
+        set clipboard=unnamedplus
+	colorscheme solarized
+   endif
+else
+    set term=xterm-256color
+    "set term=screen-256color
+    set t_Co=256
+endif
+
+
+let g:syntastic_html_tidy_exec = '/usr/local/bin/tidy'
