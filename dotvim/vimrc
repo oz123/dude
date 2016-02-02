@@ -10,7 +10,6 @@ Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-easy-align'
 "
 " On-demand loading
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 "
 Plug 'tpope/vim-fugitive'
@@ -73,7 +72,7 @@ Plug 'davidhalter/jedi-vim'
 Plug 'tmhedberg/SimpylFold'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'jnurmine/Zenburn'
-Plug 'jistr/vim-nerdtree-tabs'
+Plug 'jistr/vim-nerdtree-tabs'"  { 'on':  'NERDTreeTabsToggle' }
 "
 call plug#end()
 "
@@ -94,7 +93,7 @@ map <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 "
 " NERDTree (better file browser) toggle
-map <F3> :NERDTreeToggle<CR>
+map <F3> :NERDTreeTabsToggle<CR>
 map tbd :set background=dark<CR>
 map tbl :set background=light<CR>
 " Ignore files on NERDTree
