@@ -70,10 +70,10 @@ Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'majutsushi/tagbar'
 Plug 'sorin-ionescu/vim-htmlvalidator'
 Plug 'davidhalter/jedi-vim'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'jnurmine/Zenburn'
-Plugin 'jistr/vim-nerdtree-tabs'
+Plug 'tmhedberg/SimpylFold'
+Plug 'vim-scripts/indentpython.vim'
+Plug 'jnurmine/Zenburn'
+Plug 'jistr/vim-nerdtree-tabs'
 "
 call plug#end()
 "
