@@ -70,6 +70,10 @@ Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'majutsushi/tagbar'
 Plug 'sorin-ionescu/vim-htmlvalidator'
 Plug 'davidhalter/jedi-vim'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'jnurmine/Zenburn'
+Plugin 'jistr/vim-nerdtree-tabs'
 "
 call plug#end()
 "
@@ -166,6 +170,7 @@ else
     set term=xterm-256color
     "set term=screen-256color
     set t_Co=256
+    colorscheme zenburn
 endif
 
 
