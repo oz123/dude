@@ -43,5 +43,6 @@ if [ ! -d /mnt/gentoo ]; then
 fi
 
 mount_all $1
+cat /etc/resolv.conf > /mnt/gentoo/etc/resolv.conf
 chroot /mnt/gentoo/ /bin/bash --rcfile /.bashrc 
 unmount_all $1
