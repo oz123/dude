@@ -8,10 +8,6 @@ call plug#begin('~/.vim/plugged')
 " Make sure you use single quotes
 Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-easy-align'
-"
-" On-demand loading
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-"
 Plug 'tpope/vim-fugitive'
 Plug 'Lokaltog/vim-easymotion'
 "Plug 'git://git.wincent.com/command-t.git'
@@ -173,3 +169,4 @@ else
 endif
 
 let g:syntastic_html_tidy_exec = '/usr/local/bin/tidy'
+let g:flake8_show_quickfix=0  " don't show
