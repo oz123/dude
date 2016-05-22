@@ -258,8 +258,9 @@ function pextract()
 
 
 
-if [ -f .bash_alias ]; then
-   source .bash_alias 
+if [ -f ~/.bash_alias ]; then
+   source ~/.bash_alias 
+
 fi
 
 export WORKON_HOME=$HOME/.virtualenvs

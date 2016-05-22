@@ -1,4 +1,4 @@
 [alias]
     latest-tag = !git fetch --tags && git describe $(git rev-list --tags --max-count=1)
     log-pretty-all = log --branches --remotes --tags --graph --oneline --decorate --full-history --all  --color --pretty=oneline --abbrev-commit
-
+    del-remote-branch = "!f() { git push origin --delete $1; }; f"
