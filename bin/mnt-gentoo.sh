@@ -13,6 +13,8 @@ function mount_all(){
 	mount --rbind /dev /mnt/gentoo/dev
 	mount --make-rslave /mnt/gentoo/dev
 	mount --bind /dev/shm /mnt/gentoo/dev/shm
+        mount --bind /dev/pts /mnt/gentoo/dev/pts
+        mount --bind /run/udev /mnt/gentoo/run/udev
 }
 
 # clean up after exiting chroot
@@ -38,9 +40,11 @@ if [ -z $1 ]; then
 fi
 
 
-if [ ! -d /mnt/gentoo ]; then
-	mkdir /mnt/gentoo
-fi
+for dr in /mnt/gentoo/ /mnt/gentoo/run/udev; do
+	if [ ! -d $dr ]; then
+		mkdir -p $dr
+	fi
+done
 
 mount_all $1
 cat /etc/resolv.conf > /mnt/gentoo/etc/resolv.conf
