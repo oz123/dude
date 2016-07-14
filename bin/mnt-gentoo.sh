@@ -14,6 +14,11 @@ function mount_all(){
 	mount --make-rslave /mnt/gentoo/dev
 	mount --bind /dev/shm /mnt/gentoo/dev/shm
         mount --bind /dev/pts /mnt/gentoo/dev/pts
+	for dr in /mnt/gentoo/ /mnt/gentoo/run /mnt/gentoo/run/udev; do
+		if [ ! -d $dr ]; then
+			mkdir -p $dr
+		fi
+	done
         mount --bind /run/udev /mnt/gentoo/run/udev
 }
 
@@ -40,11 +45,6 @@ if [ -z $1 ]; then
 fi
 
 
-for dr in /mnt/gentoo/ /mnt/gentoo/run/udev; do
-	if [ ! -d $dr ]; then
-		mkdir -p $dr
-	fi
-done
 
 mount_all $1
 cat /etc/resolv.conf > /mnt/gentoo/etc/resolv.conf
