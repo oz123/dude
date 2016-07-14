@@ -1,0 +1,13 @@
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+LABEL=GENTOO  /               ext4    defaults,discard,errors=remount-ro 0       1
+UUID=1ffe0065-a9bf-4dd2-9993-7bcde50ba040  /home           ext4     defaults        0       0
+UUID="4e9dbe29-16ee-4eca-88f8-97e87447018a" 	none	swap	sw	0	0
+# temporal mountpoints on TMPFS
+tmpfs           /tmp            tmpfs           size=6G,noatime        0 0
+tmpfs           /var/tmp        tmpfs           size=12G,noatime         0 0
