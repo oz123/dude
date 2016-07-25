@@ -134,13 +134,17 @@ PS1+="$Blue\u$Color_Off@$Blue\h$Color_Off:$BPurple\w$Color_Off"
 
 # set up command prompt
 function __prompt_command()
-{
+{   
     # capture the exit status of the last command
     EXIT="$?"
     PS1=""
  
     #if [ $EXIT -eq 0 ]; then PS1+="$Green[\!]$Color_Off "; else PS1+="$Red[\!]$Color_Off "; fi
-    if [ $EXIT -eq 0 ]; then PS1+="$Green[\#]$Color_Off "; else PS1+="$Red[\#]$Color_Off "; fi
+    if [ $EXIT -eq 0 ]; then 
+	    PS1+="$Green[\#]$Color_Off "; 
+    else 
+	    PS1+="$Red[\#]$Color_Off "; 
+    fi
  
     # if logged in via ssh shows the ip of the client
     if [ -n "$SSH_CLIENT" ]; 
@@ -276,5 +280,10 @@ elif [ -f /usr/bin/virtualenvwrapper.sh ]; then
    source /usr/bin/virtualenvwrapper.sh
 fi
 
+
+export AUTO_NTFY_DONE_LONGER_THAN=-L10
+source /home/oznt/.local/share/ntfy/bash-preexec.sh
+source /home/oznt/.local/share/ntfy/auto-ntfy-done.sh
+export AUTO_NTFY_DONE_IGNORE="vim screen meld"
 eval $(thefuck --alias)
 export PYTHONSTARTUP=~/.pythonrc
