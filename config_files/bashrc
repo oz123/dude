@@ -136,11 +136,10 @@ PS1+="$Blue\u$Color_Off@$Blue\h$Color_Off:$BPurple\w$Color_Off"
 function __prompt_command()
 {   
     # capture the exit status of the last command
-    EXIT="$?"
+    EXIT=$__bp_last_ret_value
     PS1=""
- 
     #if [ $EXIT -eq 0 ]; then PS1+="$Green[\!]$Color_Off "; else PS1+="$Red[\!]$Color_Off "; fi
-    if [ $EXIT -eq 0 ]; then 
+    if [[ ${EXIT} -eq 0 ]]; then 
 	    PS1+="$Green[\#]$Color_Off "; 
     else 
 	    PS1+="$Red[\#]$Color_Off "; 
@@ -199,6 +198,13 @@ alias todo='task'
 alias t='task'
 
 alias gitlogpretty="git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s" --color"
+
+# source aliases
+
+if [ -f ~/.bash_aliases ]; then
+   source ~/.bash_aliases
+fi
+
 
 # enable bash completion in interactive shells
 if ! shopt -oq posix; then
@@ -281,9 +287,34 @@ elif [ -f /usr/bin/virtualenvwrapper.sh ]; then
 fi
 
 
-export AUTO_NTFY_DONE_LONGER_THAN=-L10
+export PYTHONSTARTUP=~/.pythonrc
+export AUTO_NTFY_DONE_LONGER_THAN=-L15
 source /home/oznt/.local/share/ntfy/bash-preexec.sh
 source /home/oznt/.local/share/ntfy/auto-ntfy-done.sh
-export AUTO_NTFY_DONE_IGNORE="vim screen meld"
-eval $(thefuck --alias)
-export PYTHONSTARTUP=~/.pythonrc
+eval "$(thefuck --alias)"
+
+
+# Greetings stranger, if you reached here by reading trough, here is a
+#__        __                    __        __   _
+#\ \      / /_ _ _ __ _ __ ___   \ \      / /__| | ___  ___ ___  _ __ ___   ___
+# \ \ /\ / / _` | '__| '_ ` _ \   \ \ /\ / / _ \ |/ _ \/ __/ _ \| '_ ` _ \ / _ \
+#  \ V  V / (_| | |  | | | | | |   \ V  V /  __/ |  __/ (_| (_) | | | | | |  __/
+#   \_/\_/ \__,_|_|  |_| |_| |_|    \_/\_/ \___|_|\___|\___\___/|_| |_| |_|\___|
+#
+# You have found my highly opinionated bashrc composed of snippets from various
+# sources, battle tested through almost a decade of linux administration and
+# software development in hostile environments.
+#
+# The sources and insiration for this bashrc are as the following,
+# not necessarily in order
+# of amount or importance:
+# - zless - for extract alias
+# - debian default profile
+# - git-prompt
+# - ipython
+# - vim-powerline (and vim-airline
+#
+# To enjoy the full power of this bashrc you should install the following
+# dependencies:
+# ntfy - http://ntfy.readthedocs.io/en/latest/
+# thefuck - https://github.com/nvbn/thefuck
