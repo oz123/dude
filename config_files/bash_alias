@@ -1,0 +1,4 @@
+# all aliases should live here
+
+alias gitlogpretty="git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s" --color"
+:
