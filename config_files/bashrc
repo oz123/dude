@@ -192,11 +192,6 @@ branch="["$branch"]"
 PROMPT_COMMAND=__prompt_command
 
 
-alias RPBT="mplayer -softvol -ao alsa:device=bluetooth cache 128 -playlist http://www.radioparadise.com/musiclinks/rp_1
-28aac.m3u"
-alias todo='task'
-alias t='task'
-
 alias gitlogpretty="git log --graph --full-history --all --pretty=format:"%h%x09%d%x20%s" --color"
 
 # source aliases
