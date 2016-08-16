@@ -9,7 +9,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-fugitive'
-Plug 'Lokaltog/vim-easymotion'
+Plug 'easymotion/vim-easymotion'
 "Plug 'git://git.wincent.com/command-t.git'
 Plug 'altercation/vim-colors-solarized'
 " XML/HTML tags navigation
@@ -170,3 +170,10 @@ endif
 
 let g:syntastic_html_tidy_exec = '/usr/local/bin/tidy'
 let g:flake8_show_quickfix=0  " don't show
+
+" because CTL-W is killing my left hand :-(
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+nnoremap <leader>m <C-W><C-W>
