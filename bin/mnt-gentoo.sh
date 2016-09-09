@@ -45,8 +45,16 @@ if [ -z $1 ]; then
 fi
 
 
+function mount_resolvconf(){
+	if [ -L /etc/resolv.conf ]; then
+                touch /mnt/gentoo/etc/resolv.conf
+		mount --bind /etc/resolv.conf /mnt/gentoo/etc/resolv.conf
+	else
+		cat /etc/resolv.conf > /mnt/gentoo/etc/resolv.conf
+	fi
+}
 
 mount_all $1
-cat /etc/resolv.conf > /mnt/gentoo/etc/resolv.conf
+mount_resolvconf
 chroot /mnt/gentoo/ /bin/bash --rcfile /.bashrc 
 unmount_all $1
