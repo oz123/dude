@@ -3,7 +3,7 @@
 # not the best in the world, but does the job of preserving my gentoo installation
 # mount your gentoo partition and back it up ...
 
-tar czf ../gentoo.backup-08-Sep-2016.tar.gz --exclude=./run \
+tar czf ../gentoo.backup-`date +%Y-%m-%d`.tar.gz --exclude=./run \
 	--exclude=./lost+found \
 	--exclude=./tmp  \
 	--exclude=./dev \
