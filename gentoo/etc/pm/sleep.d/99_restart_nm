@@ -1,0 +1,19 @@
+#!/bin/bash
+
+case $1 in
+    hibernate)
+        service NetworkManager stop
+    ;;
+    suspend)
+        service NetworkManager stop
+    ;;
+    thaw)
+        service NetworkManager start
+    ;;
+    resume)
+        service NetworkManager start
+    ;;
+    *)  echo "Somebody is calling me totally wrong."
+    ;;
+esac
+
