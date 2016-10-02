@@ -70,7 +70,8 @@ Plug 'davidhalter/jedi-vim'
 Plug 'tmhedberg/SimpylFold'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'jnurmine/Zenburn'
-Plug 'jistr/vim-nerdtree-tabs'"  { 'on':  'NERDTreeTabsToggle' }
+Plug 'jistr/vim-nerdtree-tabs', { 'on':  'NERDTreeTabsToggle' }
+Plug 'ntpeters/vim-better-whitespace'
 "
 call plug#end()
 "
