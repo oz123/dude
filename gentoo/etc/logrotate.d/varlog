@@ -1,0 +1,24 @@
+/var/log/messages {
+    rotate 10
+    size 2M
+    compress
+}
+
+/var/log/syslog {
+    rotate 10
+    size 2M
+    compress
+}
+
+/var/log/syslog {
+    rotate 10
+    size 2M
+    compress
+}
+
+/var/log/*.log {
+    rotate 10
+    size 2M
+    compress
+}
+
