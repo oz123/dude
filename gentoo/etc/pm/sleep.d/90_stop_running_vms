@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# 90virtualbox: scan for active virtual machines and pause them on host suspend
+
+PATH=$PATH:/opt/bin
+
+VBOXMANAGE=`which VBoxManage`
+
+for user in `users`; do
+	su $user $VBOXMANAGE list runningvms | while read line; do 
+	su $user $VBOXMANAGE controlvm "$(expr match "$line" '"\(.*\)"')" pause;
+	done
+done
