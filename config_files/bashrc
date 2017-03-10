@@ -263,10 +263,14 @@ function pextract()
        echo "'$1' is not a valid file"
    fi
 
+# fix vim colors inside tmux
+if [[ $TERM == xterm ]]; then
+    TERM=xterm-256color
+fi
 
 
 if [ -f ~/.bash_alias ]; then
-   source ~/.bash_alias 
+   source ~/.bash_alias
 
 fi
 
