@@ -3,23 +3,22 @@
 # not the best in the world, but does the job of preserving my gentoo installation
 # mount your gentoo partition and back it up ...
 
-if [ -z $2 ]; then
-	ROOT=$2
-else
-	ROOT="."
-fi
+ROOT=$2
 
 DIROUT=$1
 
 
-tar czf $DIROUT/gentoo.backup-`date +%Y-%m-%d`.tar.gz --exclude=./run \
-	--exclude=./lost+found \
-	--exclude=./tmp  \
-	--exclude=./dev \
-	--exclude=./proc \
-	--exclude=./home \
-	--exclude=./usr/portage/distfiles \
-	--exclude=./usr/portage/packages \
-	--exclude=./var/lib/docker \
-	--exclude=./sys ${ROOT}
+tar vczf $DIROUT/gentoo.backup-`date +%Y-%m-%d`.tar.gz \
+	--exclude=${ROOT}run \
+	--exclude=${ROOT}lost+found \
+	--exclude=${ROOT}tmp  \
+	--exclude=${ROOT}dev \
+	--exclude=${ROOT}proc \
+	--exclude=${ROOT}home \
+	--exclude=${ROOT}mnt \
+	--exclude=${ROOT}usr/portage/distfiles \
+	--exclude=${ROOT}usr/portage/packages \
+	--exclude=${ROOT}var/lib/docker \
+	--exclude=${ROOT}var/log \
+	--exclude=${ROOT}sys ${ROOT}
 
