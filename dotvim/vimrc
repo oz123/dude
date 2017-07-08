@@ -66,15 +66,31 @@ Plug 'luochen1990/rainbow'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'majutsushi/tagbar'
 Plug 'sorin-ionescu/vim-htmlvalidator'
-Plug 'davidhalter/jedi-vim'
+Plug 'davidhalter/jedi-vim', {'for': 'python'}
+Plug 'jmcantrell/vim-virtualenv', {'for': 'python'}
+Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'tmhedberg/SimpylFold'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'jnurmine/Zenburn'
-Plug 'jistr/vim-nerdtree-tabs', { 'on':  'NERDTreeTabsToggle' }
+Plug 'jistr/vim-nerdtree-tabs', { 'on':  'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'AssailantLF/vim-active-numbers'
 "
 call plug#end()
 "
+
+" Add the virtualenv's site-packages to vim path
+py3 << EOF
+import os.path
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, project_base_dir)
+EOF
+
+let g:jedi#force_py_version = 3
+
 " always show status bar
 set ls=2
 " incremental search
@@ -92,7 +108,7 @@ map <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 "
 " NERDTree (better file browser) toggle
-map <F3> :NERDTreeTabsToggle<CR>
+map <F3> :NERDTreeToggle<CR>
 map tbd :set background=dark<CR>
 map tbl :set background=light<CR>
 " Ignore files on NERDTree
@@ -184,3 +200,5 @@ nnoremap <leader>m <C-W><C-W>
 
 "switch between to most recent files
 nnoremap <leader>k <c-^>
+
+let g:syntastic_rst_checkers = ['sphinx']

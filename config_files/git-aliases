@@ -1,0 +1,17 @@
+[alias]
+	commit-record="!coverageRecord() { \
+		if [ ! -f .coverage ]; then \
+		   echo 'Did you run your tests with coverage?'; \
+		   exit 1; \
+		fi;\
+		TMPFILE=`mktemp`; \
+		git show -s --format=%B HEAD > $TMPFILE;\
+		echo $TMPFILE ;\
+		grep -qc  'COVERAGE REPORT' $TMPFILE; \
+		if [ $? -ne 0 ]; then \
+		   echo 'COVERAGE REPORT' >> $TMPFILE ;\
+		   coverage report >> $TMPFILE ; \
+		   git commit --amend -F $TMPFILE; \
+		fi ;\
+		rm $TMPFILE ;\
+      }; coverageRecord"
