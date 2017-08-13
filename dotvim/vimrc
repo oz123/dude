@@ -153,7 +153,7 @@ endif
 "
 "0 if you want to enable it later via :RainbowToggle
 let g:rainbow_active = 1
-filetype plugin on
+"filetype plugin on
 
 "Activation based on file type
 "augroup rainbow_lisp
@@ -202,3 +202,7 @@ nnoremap <leader>m <C-W><C-W>
 nnoremap <leader>k <c-^>
 
 let g:syntastic_rst_checkers = ['sphinx']
+" for AssailantLF/vim-active-numbers
+let g:actnum_exclude =
+      \ [ 'unite', 'tagbar', 'startify', 'undotree', 'gundo', 'vimshell', 'w3m', 
+      \  'markdown']
