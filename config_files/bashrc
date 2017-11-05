@@ -130,33 +130,6 @@ Yellow="\[\033[0;33m\]"
 
 PS1=""
 
-__vte_urlencode() (
-  # This is important to make sure string manipulation is handled
-  # byte-by-byte.
-  LC_ALL=C
-  str="$1"
-  while [ -n "$str" ]; do
-    safe="${str%%[!a-zA-Z0-9/:_\.\-\!\'\(\)~]*}"
-    printf "%s" "$safe"
-    str="${str#"$safe"}"
-    if [ -n "$str" ]; then
-      printf "%%%02X" "'$str"
-      str="${str#?}"
-    fi
-  done
-)
-
-# Print a warning so that anyone who's added this manually to his PS1 can adapt.
-# The function will be removed in a later version.
-__vte_ps1() {
-  echo -n "(__vte_ps1 is obsolete)"
-}
-
-__vte_osc7 () {
-  printf "\033]7;file://%s%s\007" "${HOSTNAME:-}" "$(__vte_urlencode "${PWD}")"
-}
-
-
 PS1+="$Blue\u$Color_Off@$Blue\h$Color_Off:$BPurple\w$Color_Off"
 
 # set up command prompt
@@ -215,8 +188,6 @@ branch="["$branch"]"
       PS1="(`basename \"$VIRTUAL_ENV\"`)$PS1"
    fi
 
-   VTE_PWD_THING="$(__vte_osc7)"
-   PS1="$PS1$VTE_PWD_THING"
 }
 
 PROMPT_COMMAND=__prompt_command
