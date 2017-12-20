@@ -10,6 +10,8 @@ cp ../usr/src/linux/.config .
 make silentoldconfig
 make -j3
 make install
-make INSTALL_MOD_STRIP=1 modulesinstall
+make INSTALL_MOD_STRIP=1 modules_install
 
+genkernel --install initramfs
 cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg.bu_`date +%Y-%m-%d`
+grub-mkconfig -o /boot/grub/grub.cfg
