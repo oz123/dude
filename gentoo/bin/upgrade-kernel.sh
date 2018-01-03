@@ -5,7 +5,10 @@ set -e
 
 KERNEL_VERSION=$1
 
-cd /usr/src/$KERNEL_VERSION
+emerge -1 =sys-kernel/$KERNEL_VERSION
+
+IFS='-' read -a KVA <<< "${KERNEL_VERSION}"
+cd /usr/src/linux-${KVA[2]}-gentoo
 
 cp /usr/src/linux/.config .
 make silentoldconfig
