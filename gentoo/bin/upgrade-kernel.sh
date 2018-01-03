@@ -16,7 +16,8 @@ make -j3
 make install
 make INSTALL_MOD_STRIP=1 modules_install
 
-eselect kernel --set $KERNEL_VERSION
+eselect kernel --set linux-${KVA[2]}-gentoo
 genkernel --install initramfs
 cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg.bu_`date +%Y-%m-%d`
 grub-mkconfig -o /boot/grub/grub.cfg
+emerge @module-rebuild
