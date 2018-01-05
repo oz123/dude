@@ -29,10 +29,12 @@ fi
 
 cd /usr/src/linux-${KERNEL_VERSION}-gentoo
 
-IFS='-' read -a KVA <<< "${KERNEL_VERSION}"
-cd /usr/src/linux-${KVA[2]}-gentoo
+if [ -r /usr/src/linux/.config ]; then
+	cp /usr/src/linux/.config .
+else
+	cp /boot/config-`uname -r`-gentoo .config
+fi
 
-cp /usr/src/linux/.config .
 make silentoldconfig
 make -j$JOBS
 make install
