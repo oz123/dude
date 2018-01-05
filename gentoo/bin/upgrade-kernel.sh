@@ -3,10 +3,31 @@
 # upgrade kernel the gentoo way - this assumes old config exists
 set -e
 
+function trim() {
+    local var="$*"
+    # remove leading whitespace characters
+    var="${var#"${var%%[![:space:]]*}"}"
+    # remove trailing whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"
+    echo -n "$var"
+}
+
+function emerge_latest(){
+   LATEST=`equery m gentoo-sources | egrep  'Keywords:\s+4.9'| tail -1 | cut -d":" -f 2`
+   LATEST=`trim ${LATEST}`
+   emerge -1 =sys-kernel/gentoo-sources-${LATEST}
+}
+
+
 JOBS=${JOBS:-3}  # If variable not set, use default.
 KERNEL_VERSION=$1
 
-emerge -1 =sys-kernel/$KERNEL_VERSION
+if [ -z ${KERNEL_VERSION} ]; then
+    emerge_latest
+    KERNEL_VERSION=${KERNEL_VERSION:-${LATEST}}
+fi
+
+cd /usr/src/linux-${KERNEL_VERSION}-gentoo
 
 IFS='-' read -a KVA <<< "${KERNEL_VERSION}"
 cd /usr/src/linux-${KVA[2]}-gentoo
