@@ -3,6 +3,7 @@
 # upgrade kernel the gentoo way - this assumes old config exists
 set -e
 
+JOBS=${JOBS:-3}  # If variable not set, use default.
 KERNEL_VERSION=$1
 
 emerge -1 =sys-kernel/$KERNEL_VERSION
@@ -12,9 +13,9 @@ cd /usr/src/linux-${KVA[2]}-gentoo
 
 cp /usr/src/linux/.config .
 make silentoldconfig
-make -j3
+make -j$JOBS
 make install
-make INSTALL_MOD_STRIP=1 modules_install
+make -j$JOBS INSTALL_MOD_STRIP=1 modules_install
 
 eselect kernel --set linux-${KVA[2]}-gentoo
 genkernel --install initramfs
