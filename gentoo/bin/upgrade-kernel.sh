@@ -15,9 +15,36 @@ function trim() {
 function emerge_latest(){
    LATEST=`equery m gentoo-sources | egrep  'Keywords:\s+4.9'| tail -1 | cut -d":" -f 2`
    LATEST=`trim ${LATEST}`
-   emerge -1 =sys-kernel/gentoo-sources-${LATEST}
+   emerge -n1 =sys-kernel/gentoo-sources-${LATEST}
 }
 
+
+function copy_config(){
+	cd /usr/src/linux-${KERNEL_VERSION}-gentoo
+
+	if [ -r /usr/src/linux/.config ]; then
+		cp /usr/src/linux/.config .
+	else
+		cp /boot/config-`uname -r`-gentoo .config
+	fi
+}
+
+function build_all(){
+
+	make silentoldconfig
+	make -j$JOBS
+	make install
+	make -j$JOBS INSTALL_MOD_STRIP=1 modules_install
+}
+
+function install_kernel(){
+	eselect kernel --set linux-${KERNEL_VERSION}-gentoo
+	genkernel --install initramfs
+	cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg.bu_`date +%Y-%m-%d`
+	grub-mkconfig -o /boot/grub/grub.cfg
+	emerge @module-rebuild
+
+}
 
 JOBS=${JOBS:-3}  # If variable not set, use default.
 KERNEL_VERSION=$1
@@ -27,21 +54,6 @@ if [ -z ${KERNEL_VERSION} ]; then
     KERNEL_VERSION=${KERNEL_VERSION:-${LATEST}}
 fi
 
-cd /usr/src/linux-${KERNEL_VERSION}-gentoo
-
-if [ -r /usr/src/linux/.config ]; then
-	cp /usr/src/linux/.config .
-else
-	cp /boot/config-`uname -r`-gentoo .config
-fi
-
-make silentoldconfig
-make -j$JOBS
-make install
-make -j$JOBS INSTALL_MOD_STRIP=1 modules_install
-
-eselect kernel --set linux-${KVA[2]}-gentoo
-genkernel --install initramfs
-cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg.bu_`date +%Y-%m-%d`
-grub-mkconfig -o /boot/grub/grub.cfg
-emerge @module-rebuild
+copy_config
+build_all
+install_kernel
