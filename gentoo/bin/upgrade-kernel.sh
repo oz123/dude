@@ -2,6 +2,7 @@
 
 # upgrade kernel the gentoo way - this assumes old config exists
 set -e
+set -x
 
 function trim() {
     local var="$*"
@@ -15,6 +16,7 @@ function trim() {
 function emerge_latest(){
    LATEST=`equery m gentoo-sources | egrep  'Keywords:\s+4.9'| tail -1 | cut -d":" -f 2`
    LATEST=`trim ${LATEST}`
+   echo "sys-kernel/gentoo-sources-${LATEST} ~amd64" > /etc/portage/package.accept_keywords/kernel
    emerge -n1 =sys-kernel/gentoo-sources-${LATEST}
 }
 
@@ -32,14 +34,20 @@ function copy_config(){
 function build_all(){
 
 	make silentoldconfig
-	make -j$JOBS
+	make -j$JOBS vmlinux bzImage
+	make -j$JOBS modules
 	make install
 	make -j$JOBS INSTALL_MOD_STRIP=1 modules_install
 }
 
 function install_kernel(){
 	eselect kernel --set linux-${KERNEL_VERSION}-gentoo
-	genkernel --install initramfs
+	
+	# optionally build an initramfs
+	if [ -z WITH_INITRAM_FS ]; then
+		genkernel --install initramfs
+	fi
+
 	cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg.bu_`date +%Y-%m-%d`
 	grub-mkconfig -o /boot/grub/grub.cfg
 	emerge @module-rebuild
@@ -48,6 +56,7 @@ function install_kernel(){
 
 JOBS=${JOBS:-3}  # If variable not set, use default.
 KERNEL_VERSION=$1
+WITH_INITRAM_FS=""
 
 if [ -z ${KERNEL_VERSION} ]; then
     emerge_latest
