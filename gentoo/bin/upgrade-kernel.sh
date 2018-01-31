@@ -15,7 +15,7 @@ function trim() {
 
 function emerge_latest(){
    local KV=$(uname -r)
-   local MAJOR = ${KV%.[[:digit:]]*} # extract 4.9 from 4.9.XY
+   local MAJOR=${KV%.[[:digit:]]*} # extract 4.9 from 4.9.XY
    local LATEST=`equery m gentoo-sources | egrep  "Keywords:\s+${MAJOR}"| tail -1 | cut -d":" -f 2`
    LATEST=`trim ${LATEST}`
    echo "=sys-kernel/gentoo-sources-${LATEST} ~amd64" > /etc/portage/package.accept_keywords/kernel
