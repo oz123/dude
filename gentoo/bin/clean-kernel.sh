@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# yuck eclean-kernel seems dead
+# eclean-kernel2 is written in c++ and seems buggy
+
 # USAGE: $script 4.9.72-gentoo
 KV=$1
 
