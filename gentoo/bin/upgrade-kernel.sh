@@ -46,7 +46,7 @@ function install_kernel(){
 	eselect kernel --set linux-${KERNEL_VERSION}-gentoo
 
 	# optionally build an initramfs
-	if [ ! -z WITH_INITRAM_FS ]; then
+	if [ ! -z ${WITH_INITRAM_FS} ]; then
 		genkernel --install initramfs
 	fi
 
