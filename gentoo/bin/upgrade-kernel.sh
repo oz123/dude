@@ -29,7 +29,7 @@ function copy_config(){
 	if [ -r /usr/src/linux/.config ]; then
 		cp /usr/src/linux/.config .
 	else
-		cp /boot/config-`uname -r`-gentoo .config
+		cp /boot/config-`uname -r` .config
 	fi
 }
 
