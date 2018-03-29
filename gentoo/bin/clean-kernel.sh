@@ -27,7 +27,7 @@ while true; do
     -v|--verbose ) VERBOSE=true; shift ;;
     -h|--help )    usage; shift ;;
     -k|--kernel )
-       KV+=("${@:2}") ; break;;
+       KV+=("${@:2}") ; shift;;
     --) shift; break ;;
     *) break ;;
   esac
