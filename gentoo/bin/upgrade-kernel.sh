@@ -2,7 +2,48 @@
 
 # upgrade kernel the gentoo way - this assumes old config exists
 set -e
-set -x
+
+
+function usage(){
+	echo >&2 \
+	echo "usage: $0 [-v] [-j jobs ] [-k version] [--initramfs] [-h|help]"
+	exit 1 ;
+}
+
+SHORT="vhk:j:"
+LONG="help,initramfs,jobs"
+
+OPTS=`getopt -o $SHORT --long $LONG -n $0 -- "$@" 2>/dev/null`
+
+if [ $? != 0 ] ; then usage ; fi
+
+eval set -- "$OPTS"
+
+VERBOSE=false
+IRFS=""
+
+
+while true; do
+  case "$1" in
+    -v|--verbose ) VERBOSE=true; shift ;;
+    -h|--help )    usage; shift ;;
+    --initramfs )
+       IRFS=true;
+       shift;;
+    -j|--jobs )
+       JOBS=$2; shift;;
+    -k )
+        KV=$2; shift ;;
+    --) shift; break ;;
+    *) break ;;
+  esac
+done
+
+
+JOBS=${JOBS:-3}  # If variable not set, use default.
+KERNEL_VERSION=${KV}
+# set initial values
+VERBOSE=false
 
 function trim() {
     local var="$*"
@@ -46,7 +87,7 @@ function install_kernel(){
 	eselect kernel --set linux-${KERNEL_VERSION}-gentoo
 
 	# optionally build an initramfs
-	if [ ! -z ${WITH_INITRAM_FS} ]; then
+	if [ ! -z ${IRFS} ]; then
 		genkernel --install initramfs
 	fi
 
@@ -56,9 +97,6 @@ function install_kernel(){
 
 }
 
-JOBS=${JOBS:-3}  # If variable not set, use default.
-KERNEL_VERSION=$1
-WITH_INITRAM_FS=""
 
 if [ -z ${KERNEL_VERSION} ]; then
     emerge_latest
