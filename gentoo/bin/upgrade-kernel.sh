@@ -31,16 +31,22 @@ while true; do
        IRFS=true;
        shift;;
     -j|--jobs )
-       JOBS=$2; shift;;
-    -k )
-        KV=$2; shift ;;
-    --) shift; break ;;
-    *) break ;;
+       JOBS=$2;
+       shift;
+       shift;;
+    -k)
+        KV=$2; shift;
+	shift;;
+    --) shift;;
+    *)
+      break ;;
   esac
 done
 
 
 JOBS=${JOBS:-3}  # If variable not set, use default.
+echo $KV
+echo $JOBS
 KERNEL_VERSION=${KV}
 # set initial values
 VERBOSE=false
@@ -97,6 +103,7 @@ function install_kernel(){
 
 }
 
+set -x
 
 if [ -z ${KERNEL_VERSION} ]; then
     emerge_latest
