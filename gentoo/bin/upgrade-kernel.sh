@@ -27,9 +27,9 @@ function copy_config(){
 	cd /usr/src/linux-${KERNEL_VERSION}-gentoo
 
 	if [ -r /usr/src/linux/.config ]; then
-		cp /usr/src/linux/.config .
+		cp -f /usr/src/linux/.config .
 	else
-		cp /boot/config-`uname -r` .config
+		cp -f /boot/config-`uname -r` .config
 	fi
 }
 
@@ -58,7 +58,7 @@ function install_kernel(){
 
 JOBS=${JOBS:-3}  # If variable not set, use default.
 KERNEL_VERSION=$1
-WITH_INITRAM_FS=""
+WITH_INITRAM_FS=${WITH_INITRAM_FS:""}
 
 if [ -z ${KERNEL_VERSION} ]; then
     emerge_latest
