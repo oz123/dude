@@ -6,12 +6,12 @@
 # Option strings
 function usage(){
 	echo >&2 \
-	echo "usage: $0 [-v] [-k version ] ..."
+	echo "usage: $0 [-v] [-k version ] [-c|--clean]..."
 	exit 1 ;
 }
 
-SHORT="vhk:"
-LONG="verbose,help,kernel:"
+SHORT="vhk:c"
+LONG="verbose,help,kernel:,clean"
 
 OPTS=`getopt -o $SHORT --long $LONG -n $0 -- "$@" 2>/dev/null`
 
@@ -20,22 +20,25 @@ if [ $? != 0 ] ; then usage ; fi
 eval set -- "$OPTS"
 
 VERBOSE=false
+CMD=""
+
 declare -a KV
 
 while true; do
   case "$1" in
     -v|--verbose ) VERBOSE=true; shift ;;
     -h|--help )    usage; shift ;;
+    -c|--clean) CMD="clean"; shift;;
     -k|--kernel )
-       KV+=("${@:2}") ; shift;;
+       KV+=("${@:2}") ; shift; shift ;;
     --) shift; break ;;
-    *) break ;;
+    *) usage ;;
   esac
 done
 
-if [ ${#KV[@]} -eq 0 ]; then
-    usage
-fi
+#if [ ${#KV[@]} -eq 0 ]; then
+#    usage
+#fi
 
 KVC=()
 for i in "${KV[@]}"; do
@@ -48,7 +51,7 @@ else
     RMO=Rf
 fi
 
-function clean () {
+function purge () {
     local VERSION=$1
     VI=$(NAMEVERSION="<category>/<name>-<version>\n" eix -I --format '<installedversions:NAMEVERSION>\n' sources | grep ${VERSION%%"-"*})
     if [ ! -z $VI ]; then
@@ -61,9 +64,19 @@ function clean () {
 }
 
 
+function clean_all () {
+    local VERSIONS=$(find /usr/src/ -name "linux-*" -type d | grep -v $(readlink /usr/src/linux))
+    for item in ${VERSIONS}; do
+        make -C $item clean;
+    done
+}
+
+if [ x${CMD} == x"clean" ]; then
+    clean_all
+fi
 
 for i in "${KVC[@]}"
 do
-   echo "Cleaning kernel version $i"
-   clean "$i"
+   echo "purge kernel version $i"
+   purge "$i"
 done
