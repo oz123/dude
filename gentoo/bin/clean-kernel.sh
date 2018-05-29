@@ -55,11 +55,16 @@ function purge () {
     local VERSION=$1
     VI=$(NAMEVERSION="<category>/<name>-<version>\n" eix -I --format '<installedversions:NAMEVERSION>\n' sources | grep ${VERSION%%"-"*})
     if [ ! -z $VI ]; then
-        emerge -Ca =$VI
+        emerge -C =$VI
     fi
+    echo "Removing sources for ${VERSION}"
     rm -${RMO} /usr/src/*$VERSION*
 
+
+    echo "Removing built kernel for ${VERSION}"
     rm -${RMO} /boot/*$VERSION*
+
+    echo "Removing built modules for ${VERSION}"
     rm -${RMO} /lib/modules/*$VERSION*
 }
 
