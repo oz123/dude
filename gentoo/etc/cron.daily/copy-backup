@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#BEGIN=$1
+#END=$2
+#HOSTNAME=$3
+#REMOTEDIR=$4
+#DEST=$5
+
+BEGIN=31
+END=2
+HOSTNAME=mail.tiram.it
+REMOTEDIR=/home/oznt/
+DEST=/home/Data
+ID_FILE=/etc/buzz/ssh_id_rsa
+USER=oznt
+
+# clean older tar balls
+for (( d=$BEGIN; d>$END; d-- )); do
+    ssh -i ${ID_FILE} -l ${USER} $HOSTNAME rm -vf $HOSTNAME-$(date -d "$d day ago" +%F).tar.xz
+done
+
+# copy over new tar balls
+for (( d=$END; d>=0; d-- )); do
+    scp -i ${ID_FILE} ${USER}@$HOSTNAME:/$REMOTEDIR/$HOSTNAME-$(date -d "$d day ago" +%F).tar.xz $DEST
+done
