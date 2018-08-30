@@ -1,0 +1,3 @@
+#!/bin/bash
+NAMEVERSION="<category>/<name>-<version>" eix -I --format 'Package: <installedversions:NAMEVERSION>
+' $1
