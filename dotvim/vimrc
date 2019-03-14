@@ -45,6 +45,9 @@ Plug 'scrooloose/syntastic'
 "Plug 'guns/xterm-color-table.vim'
 "Plug 'Shougo/neocomplete.vim'
 ""Plug 'git://repo.or.cz/vcscommand.git'
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'int3/vim-extradite'
 Plug 'airblade/vim-gitgutter'
 Plug 'buztard/vim-nomad'
@@ -61,21 +64,24 @@ Plug 'chrisbra/csv.vim'
 Plug 'tpope/vim-eunuch'
 "Plug 'python-rope/ropevim'
 "Plug 'kien/rainbow_parentheses.vim'
-Plug 'bling/vim-airline'
-Plug 'luochen1990/rainbow'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+"Plug 'luochen1990/rainbow'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'majutsushi/tagbar'
 Plug 'sorin-ionescu/vim-htmlvalidator'
 Plug 'davidhalter/jedi-vim', {'for': 'python'}
 Plug 'jmcantrell/vim-virtualenv', {'for': 'python'}
 Plug 'fatih/vim-go', {'for': 'go'}
-Plug 'tmhedberg/SimpylFold'
-Plug 'vim-scripts/indentpython.vim'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+"Plug 'tmhedberg/SimpylFold'
+"Plug 'vim-scripts/indentpython.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'jistr/vim-nerdtree-tabs', { 'on':  'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'AssailantLF/vim-active-numbers'
+"Plug 'AssailantLF/vim-active-numbers'
+Plug 'Valloric/MatchTagAlways'
 "
 call plug#end()
 "
@@ -152,7 +158,7 @@ if  bufname("%")=="COMMIT_EDITMSG"
 endif
 "
 "0 if you want to enable it later via :RainbowToggle
-let g:rainbow_active = 1
+"let g:rainbow_active = 1
 "filetype plugin on
 
 "Activation based on file type
@@ -204,5 +210,45 @@ nnoremap <leader>k <c-^>
 let g:syntastic_rst_checkers = ['sphinx']
 " for AssailantLF/vim-active-numbers
 let g:actnum_exclude =
-      \ [ 'unite', 'tagbar', 'startify', 'undotree', 'gundo', 'vimshell', 'w3m', 
+      \ [ 'unite', 'tagbar', 'startify', 'undotree', 'gundo', 'vimshell', 'w3m',
       \  'markdown']
+
+ let g:airline_powerline_fonts = 1
+ if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+
+" air-line
+let g:airline_powerline_fonts = 1
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+" unicode symbols
+"let g:airline_left_sep = '»'
+"let g:airline_left_sep = '▶'
+"let g:airline_right_sep = '«'
+"let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" airline symbols
+"let g:airline_left_sep = ''
+"let g:airline_left_alt_sep = ''
+"let g:airline_right_sep = ''
+"let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+
+
+filetype plugin on
+"set omnifunc=syntaxcomplete#Complete
+let g:deoplete#enable_at_startup = 1
