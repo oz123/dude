@@ -1,13 +1,21 @@
 #!/bin/bash
 
 # upgrade kernel the gentoo way - this assumes old config exists
-set -e
+set -eu
 
+
+LOGFILE=/var/log/kernel-upgrade.log
 
 function usage(){
 	echo >&2 \
 	echo "usage: $0 [-v] [-j jobs ] [-k version] [--initramfs] [-h|help]"
 	exit 1 ;
+}
+
+
+function log() {
+	datestring=`date +"%Y-%m-%d %H:%M:%S"`
+	echo -e "$datestring - $@" | tee $LOGFILE
 }
 
 SHORT="vhk:j:"
@@ -74,19 +82,25 @@ function copy_config(){
 	cd /usr/src/linux-${KERNEL_VERSION}-gentoo
 
 	if [ -r /usr/src/linux/.config ]; then
-		cp /usr/src/linux/.config .
+		cp -f /usr/src/linux/.config .
+		log "Coppied config from " $(eselect kernel list | grep \* | sed -n "s/\(\[.*\]\)//p" | tr -d " *")
 	else
-		cp /boot/config-`uname -r` .config
+		cp -f /boot/config-`uname -r` .config
+                log "Coppied config from /boot/config-$(uname -r)" 
 	fi
 }
 
 function build_all(){
-
+        log "Started config "
 	make silentoldconfig
+        log "Building vmlinux bzImage with ${JOBS} jobs"
 	make -j$JOBS vmlinux bzImage
+        log "Building modules with ${JOBS} jobs"
 	make -j$JOBS modules
+  	log "Installing all"
 	make install
 	make -j$JOBS INSTALL_MOD_STRIP=1 modules_install
+        log "Finished installations"
 }
 
 function install_kernel(){
@@ -94,12 +108,16 @@ function install_kernel(){
 
 	# optionally build an initramfs
 	if [ ! -z ${IRFS} ]; then
+                log "Generating initramfs"
 		genkernel --install initramfs
 	fi
 
+        log "Updating grub"
 	cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg.bu_`date +%Y-%m-%d`
 	grub-mkconfig -o /boot/grub/grub.cfg
+        log "Running emerge @module-rebuild"
 	emerge @module-rebuild
+        log "Finish upgrade-kernel"
 
 }
 
