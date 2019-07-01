@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # upgrade kernel the gentoo way - this assumes old config exists
-set -eu
+set -e
 
 
 LOGFILE=/var/log/kernel-upgrade.log
@@ -14,8 +14,8 @@ function usage(){
 
 
 function log() {
-	datestring=`date +"%Y-%m-%d %H:%M:%S"`
-	echo -e "$datestring - $@" | tee $LOGFILE
+	datestring=$(date '+%y-%m-%d %H:%M:%S')
+	echo -e "${datestring} - $*" | tee -a "${LOGFILE}"
 }
 
 SHORT="vhk:j:"
@@ -86,7 +86,7 @@ function copy_config(){
 		log "Coppied config from " $(eselect kernel list | grep \* | sed -n "s/\(\[.*\]\)//p" | tr -d " *")
 	else
 		cp -f /boot/config-`uname -r` .config
-                log "Coppied config from /boot/config-$(uname -r)" 
+                log "Coppied config from /boot/config-$(uname -r)"
 	fi
 }
 
