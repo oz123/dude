@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+"""
+A tiny helper script to bump mate versions according to
+
+https://pub.mate-desktop.org/releases/
+
+run this from the top of the overlay
+"""
+import argparse
+import os
+import re
+import shutil
+import sys
+
+import requests
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-f", help="version to bump from",  required=True)
+parser.add_argument("-t", help="version to bump to",  required=True)
+
+args = parser.parse_args()
+
+with open("scripts/files/package-lists/package-list-9999-topological") as plist:  # noqa
+    packages = list(map(lambda x: x.strip(), plist.readlines()))
+
+MAJOR, MINOR, BUGFIX = args.t.split(".")
+
+resp = requests.get("https://pub.mate-desktop.org/releases/%s/" % ".".join((MAJOR, MINOR)))
+
+if resp.status_code != 200:
+    print("Could not find the version you are looking for...")
+    sys.exit(1)
+
+response = resp.text.split("\n")
+
+
+def list_ebuilds(package):
+    """list existing ebuilds"""
+    for root, dirs, files in os.walk(package):
+        for f in files:
+            if f.endswith('ebuild') and '9999' not in f:
+                yield os.path.join(root, f)
+
+
+def find_version_in_response(name, response):
+    """find existing versions"""
+    rgx = ">(%s-\d+\.\d+\.\d+)\.tar.xz<" % name
+    matches = filter(None, (re.search(rgx, l) for l in response if name in l))
+    return sorted(i.groups()[0] for i in matches)
+
+
+for package in packages:
+    category, name = package.split("/")
+    print(category, name)
+    versions = find_version_in_response(name, response)
+    if not versions:
+        continue
+    version = "%s.ebuild" % versions[-1]
+    ebuild_updated = False
+    ebuilds = sorted(list_ebuilds(package))
+    print("ebuilds: ", ebuilds)
+
+    dst = "/".join((category, name, version))
+    print("cp %s %s" % (ebuilds[-1], dst))
+    try:
+        shutil.copy2(ebuilds[-1], dst)
+    except shutil.SameFileError:
+        pass
