@@ -67,3 +67,7 @@ for package in packages:
         shutil.copy2(ebuilds[-1], dst)
     except shutil.SameFileError:
         pass
+    # todo:
+    # add step to build and test the ebuild
+    # add commit with repoman
+    # repoman commit -S -m "app-arch/engrampa: bump to version 1.22.2"
