@@ -11,7 +11,10 @@ import argparse
 import os
 import re
 import shutil
+import subprocess as sp
 import sys
+
+from datetime import date
 
 import requests
 
@@ -26,13 +29,33 @@ with open("scripts/files/package-lists/package-list-9999-topological") as plist:
 
 MAJOR, MINOR, BUGFIX = args.t.split(".")
 
-resp = requests.get("https://pub.mate-desktop.org/releases/%s/" % ".".join((MAJOR, MINOR)))
+resp = requests.get(
+    "https://pub.mate-desktop.org/releases/%s/" % ".".join((MAJOR, MINOR)))
 
 if resp.status_code != 200:
     print("Could not find the version you are looking for...")
     sys.exit(1)
 
 response = resp.text.split("\n")
+
+
+def update_keywords_and_copyright(filename):
+    """
+    find and replace stable keywords with unstable
+    """
+    with open(filename, "r+") as fin:
+        lines = fin.readlines()
+        for n, line in enumerate(lines):
+            if "KEYWORDS" in line:
+                start, end = line.split("=")
+                ne = " ".join(["~"+j for j in [i.strip("\"~") for
+                                               i in end.split()]])
+                break
+        fin.seek(0)
+        fin.truncate()
+        lines[n] = "%s=\"%s\"\n" % (start, ne)
+        lines[0] = f"# Copyright 1999-{date.today().year} Gentoo Authors\n"
+        fin.writelines(lines)
 
 
 def list_ebuilds(package):
@@ -45,7 +68,7 @@ def list_ebuilds(package):
 
 def find_version_in_response(name, response):
     """find existing versions"""
-    rgx = ">(%s-\d+\.\d+\.\d+)\.tar.xz<" % name
+    rgx = ">(%s-\\d+\\.\\d+\\.\\d+)\\.tar.xz<" % name
     matches = filter(None, (re.search(rgx, l) for l in response if name in l))
     return sorted(i.groups()[0] for i in matches)
 
@@ -60,14 +83,17 @@ for package in packages:
     ebuild_updated = False
     ebuilds = sorted(list_ebuilds(package))
     print("ebuilds: ", ebuilds)
-
     dst = "/".join((category, name, version))
-    print("cp %s %s" % (ebuilds[-1], dst))
+
     try:
         shutil.copy2(ebuilds[-1], dst)
+        print("cp %s %s" % (ebuilds[-1], dst))
+        update_keywords_and_copyright(dst)
+        sp.call(f"sudo ebuild {dst} clean manifest package", shell=True)
+        sp.call(f"git add {dst}", shell=True)
+        path = "/".join((category, name))
+        sp.call(f"repoman commit -S -m '{path}: bump to version {args.t}",
+                cwd=path, shell=True)
     except shutil.SameFileError:
         pass
-    # todo:
-    # add step to build and test the ebuild
-    # add commit with repoman
-    # repoman commit -S -m "app-arch/engrampa: bump to version 1.22.2"
+    input("Continue to the next ebuild?")
