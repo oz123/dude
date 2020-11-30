@@ -26,5 +26,9 @@ tar vczf $DIROUT/gentoo.backup-`date +%Y-%m-%d`.tar.gz \
 	--exclude=${ROOT}var/lib/docker/* \
 	--exclude=${ROOT}var/lib/libvirt/ \
 	--exclude=${ROOT}var/log/* \
+	--exclude=${ROOT}usr/local/share/.cache/* \
+	--exclude=${ROOT}usr/local/share/.config/* \
+	--exclude=${ROOT}var/cache/distfiles/* \
+	--exclude=${ROOT}var/cache/binpkgs/* \
 	--exclude=${ROOT}sys/* ${ROOT}
 
