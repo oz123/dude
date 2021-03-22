@@ -1,19 +1,22 @@
+# printf "\n EBUILD_PHASE=$EBUILD_PHASE : Package %s/%s \n\n" ${CATEGORY} ${PN}
+
+post_install()
+{
+# echo "In post_install"
+case "${PN}" in
+	gentoo-kernel-bin|gentoo-kernel)
+		printf  "\nBackup grub configuration\n"
+		cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg-$(date +%Y-%m-%dT%H%M)
+		printf  "\nUpdating grub configuration\n"
+		grub-mkconfig -o /boot/grub/grub.cfg
+	;;
+	*)
+		: # emtpy statement in bash
+	;;
+esac
+}
+
 case "$EBUILD_PHASE" in
         postinst)       post_install    ;;
         *)              :               ;;
 esac
-
-#       printf "\n EBUILD_PHASE=$EBUILD_PHASE : Package %s/%s \n\n" ${CATEGORY} ${PN}   ;;
-
-post_install()
-{
-case "${CATEGORY}/${PN}" in
-	sys-kernel/gentoo-kernel|sys-kernel/gentoo-kernel-bin )
-		printf  "\nBackup grub configuration\n"
-		cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg-$(date +%Y-%m-%dT%H%M)
-		printf  "\nUpdating grub configuration\n"
-		grub-mkconfig -o /boo/grub/grub.cfg
-		;;
-        *)	:;;
-esac
-}
