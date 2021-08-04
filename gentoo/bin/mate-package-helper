@@ -7,8 +7,11 @@ run this from the top of the overlay
 """
 import os
 import re
+import shutil
 
-VERSION = "1.20"
+VERSION = "1.26"
+
+match_p_v = re.compile("(?P<group>\w.*?)/(?P<name>[\w.-]*)/(?P<ebuild>[\w.-]*)-(?P<version>1.*)\.ebuild")
 
 
 def list_ebuilds(package):
@@ -24,10 +27,17 @@ with open("scripts/files/package-lists/package-list-9999-topological") as plist:
 for package in packages:
     rgx = "%s/%s-%s.*.ebuild" % (package, package.split("/")[-1], VERSION)
     ebuild_updated = False
-    for ebuild in list_ebuilds(package):
+    ebuilds = sorted(list_ebuilds(package))
+    for ebuild in ebuilds:
         if re.search(rgx, ebuild):
             ebuild_updated = True
             break
     if not ebuild_updated:
-        print("Next package to work on ... {}".format(package))
+        latest = ebuilds[-2] if "9999" in ebuilds[-1] else ebuilds[-1]
+        m = match_p_v.search(latest)
+        name = f"{m.groupdict()['group']}/{m.groupdict()['name']}/{m.groupdict()['ebuild']}-{VERSION}.0.ebuild"
+        shutil.copy(latest, name) 
+        print("Next package to work on ... {}".format(name))
         break
+        
+        
