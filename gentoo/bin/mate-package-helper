@@ -8,6 +8,7 @@ run this from the top of the overlay
 import os
 import re
 import shutil
+import subprocess as sp
 
 VERSION = "1.26"
 
@@ -37,7 +38,10 @@ for package in packages:
         m = match_p_v.search(latest)
         name = f"{m.groupdict()['group']}/{m.groupdict()['name']}/{m.groupdict()['ebuild']}-{VERSION}.0.ebuild"
         shutil.copy(latest, name) 
-        print("Next package to work on ... {}".format(name))
+        sp.call("""sed -i 's/KEYWORDS=.*/KEYWORDS="~amd64"/' %s""" % name, shell=True)
+        sp.call("""sed -i 's/EAPI=6/EAPI=7/' %s""" % name, shell=True)
+        sp.call("""sed -i 's/1999-2020/1999-2021/' %s""" % name, shell=True)
+        print("Next package to work on ... \n{}".format(name))
         break
         
         
