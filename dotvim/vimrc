@@ -151,11 +151,7 @@ autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2
 " hight background when lines are longer
 let &colorcolumn=join(range(81,999),",")
 "
-" force spell when doing a git commit
-if  bufname("%")=="COMMIT_EDITMSG"
-    set spell
-    set spelllang=en
-endif
+autocmd FileType gitcommit setlocal spell
 "
 "0 if you want to enable it later via :RainbowToggle
 "let g:rainbow_active = 1

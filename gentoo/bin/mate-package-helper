@@ -36,12 +36,15 @@ for package in packages:
     if not ebuild_updated:
         latest = ebuilds[-2] if "9999" in ebuilds[-1] else ebuilds[-1]
         m = match_p_v.search(latest)
-        name = f"{m.groupdict()['group']}/{m.groupdict()['name']}/{m.groupdict()['ebuild']}-{VERSION}.0.ebuild"
-        shutil.copy(latest, name)
-        sp.call("""sed -i 's/KEYWORDS=.*/KEYWORDS="~amd64"/' %s""" % name, shell=True)
-        sp.call("""sed -i 's/EAPI=6/EAPI=7/' %s""" % name, shell=True)
-        sp.call("""sed -i 's/1999-2020/1999-2021/' %s""" % name, shell=True)
-        sp.call(f"git add {name}", shell=True)
-        sp.call(f"repoman manifest", shell=True, cwd=os.path.dirname(name))
-        print("Next package to work on ... \n{}".format(name))
-        break
+        try:
+            name = f"{m.groupdict()['group']}/{m.groupdict()['name']}/{m.groupdict()['ebuild']}-{VERSION}.0.ebuild"
+            shutil.copy(latest, name)
+            sp.call("""sed -i 's/KEYWORDS=.*/KEYWORDS="~amd64"/' %s""" % name, shell=True)
+            sp.call("""sed -i 's/EAPI=6/EAPI=7/' %s""" % name, shell=True)
+            sp.call("""sed -i 's/1999-2020/1999-2021/' %s""" % name, shell=True)
+            sp.call(f"git add {name}", shell=True)
+            sp.call(f"repoman manifest", shell=True, cwd=os.path.dirname(name))
+            print("Next package to work on ... \n{}".format(name))
+            break
+        except AttributeError:
+            print(f"Skipped {package}")
