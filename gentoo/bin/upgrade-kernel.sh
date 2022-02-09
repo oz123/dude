@@ -27,6 +27,7 @@ if [ $? != 0 ] ; then usage ; fi
 
 eval set -- "$OPTS"
 
+USE_DRACUT=true
 VERBOSE=false
 IRFS=""
 
@@ -104,21 +105,24 @@ function build_all(){
 }
 
 function install_kernel(){
-	eselect kernel --set linux-${KERNEL_VERSION}-gentoo
+	eselect kernel --set "linux-${KERNEL_VERSION}-gentoo"
 
 	# optionally build an initramfs
-	if [ ! -z ${IRFS} ]; then
+	if [ -n "${IRFS}" ]; then
                 log "Generating initramfs"
-		genkernel --install initramfs
+		if [ "${USE_DRACUT}" = true ]; then
+			dracut --kver "${KERNEL_VERSION}-gentoo"
+		else
+			genkernel --install initramfs
+		fi
 	fi
 
         log "Updating grub"
-	cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg.bu_`date +%Y-%m-%d`
+	cp -v /boot/grub/grub.cfg "/boot/grub/grub.cfg.bu_$(date +%Y-%m-%d)"
 	grub-mkconfig -o /boot/grub/grub.cfg
         log "Running emerge @module-rebuild"
 	emerge @module-rebuild
         log "Finish upgrade-kernel"
-
 }
 
 set -x
