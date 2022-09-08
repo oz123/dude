@@ -11,15 +11,14 @@ function usage(){
     echo >&2 "-c | --clean    execute make clean in each kernel sources directory"
     echo >&2 "-p | --purege   remove kernel package, sources, modules, installed files in /boot/"
     echo >&2 "-l | --list     list existing kernels in the system"
+    echo >&2 "-g | --grub     update grub after removing kernels"
     exit 1 ;
 }
 
 SHORT="vhclk:p"
 LONG="verbose,help,clean,list,kernel:"
 
-OPTS=`getopt -o $SHORT --long $LONG -n $0 -- "$@" 2>/dev/null`
-
-if [ $? != 0 ] ; then usage ; fi
+OPTS=$(getopt -o "${SHORT}" --long "${LONG}" -n "$0" -- "$@" 2>/dev/null || usage)
 
 eval set -- "$OPTS"
 
