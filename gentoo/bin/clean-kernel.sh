@@ -83,6 +83,12 @@ function clean_all () {
     done
 }
 
+function update_grub() {
+	printf  "\nBackup grub configuration\n"
+	cp -v /boot/grub/grub.cfg /boot/grub/grub.cfg-$(date +%Y-%m-%dT%H%M)
+	printf  "\nUpdating grub configuration\n"
+	grub-mkconfig -o /boot/grub/grub.cfg
+}
 
 function list() {
     local sysmaps
