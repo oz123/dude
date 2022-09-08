@@ -118,11 +118,11 @@ function list() {
         has_image="-"
         has_modules="-"
         has_source="-"
-        if [[ "${sysmaps[*]}" =~ "${modules[$i]}" ]]; then has_sysmap="+" ; fi
-        if [[ "${configs[*]}" =~ "${modules[$i]}" ]]; then has_config="+" ; fi
-        if [[ "${images[*]}"  =~ "${modules[$i]}" ]]; then has_image="+" ; fi
-        if [[ "${modules[*]}" =~ "${modules[$i]}" ]]; then has_modules="+" ; fi
-        if [[ "${sources[*]}" =~ "${modules[$i]}" ]]; then has_source="+" ; fi
+        if [[ "${sysmaps[*]}" =~ ${modules[$i]} ]]; then has_sysmap="+" ; fi
+        if [[ "${configs[*]}" =~ ${modules[$i]} ]]; then has_config="+" ; fi
+        if [[ "${images[*]}"  =~ ${modules[$i]} ]]; then has_image="+" ; fi
+        if [[ "${modules[*]}" =~ ${modules[$i]} ]]; then has_modules="+" ; fi
+        if [[ "${sources[*]}" =~ ${modules[$i]} ]]; then has_source="+" ; fi
 
         printf '%0.1s' "-"{1..66}
         printf '|\n'
