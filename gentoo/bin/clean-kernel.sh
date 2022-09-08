@@ -60,7 +60,7 @@ fi
 
 function purge () {
     local VERSION=$1
-    VI=$(NAMEVERSION="<category>/<name>-<version>\n" eix -I --format '<installedversions:NAMEVERSION>\n' sources | grep ${VERSION%%"-"*})
+    VI=$(NAMEVERSION="<category>/<name>-<version>\n" eix -I --format '<installedversions:NAMEVERSION>\n' sources | grep ${VERSION%%"-"*} 2>/dev/null)
     if [ ! -z $VI ]; then
         emerge -C =$VI
     fi
