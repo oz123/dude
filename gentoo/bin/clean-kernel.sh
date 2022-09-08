@@ -34,6 +34,7 @@ while true; do
     -p|--purge   )    CMD="purge"  ; shift ;;
     -l|--list    )    CMD="list"   ; shift ;;
     -c|--clean   )    CMD="clean"  ; shift ;;
+    -g|--grub    )    CMD="clean"  ; shift ;;
     -k|--kernel  )
        KV+=("${@:2}") ; shift; shift ;;
     --) shift; break ;;
