@@ -1,0 +1,6 @@
+#!/bin/bash
+
+eclean packages
+eclean distfiles
+
+emerge -avuDN --with-bdeps y --keep-going y @world
