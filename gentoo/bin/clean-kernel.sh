@@ -1,17 +1,19 @@
 #!/bin/bash
+set -e
 
 # yuck eclean-kernel seems dead
 # eclean-kernel2 is written in c++ and seems buggy
 
 # Option strings
 function usage(){
-    echo >&2 "usage: $0 [-v] [-k version ] [-c|--clean]..."
+    echo >&2 "usage: $0 [-v] [-k version ] [-c|--clean] -k <version>..."
     echo >&2 ""
     echo >&2 "OPTIONS:"
     echo >&2 "-c | --clean    execute make clean in each kernel sources directory"
     echo >&2 "-p | --purege   remove kernel package, sources, modules, installed files in /boot/"
     echo >&2 "-l | --list     list existing kernels in the system"
     echo >&2 "-g | --grub     update grub after removing kernels"
+    echo >&2 "-k | --kernel   the kernel version "
     exit 1 ;
 }
 
@@ -41,22 +43,6 @@ while true; do
     *) usage ;;
   esac
 done
-
-#if [ ${#KV[@]} -eq 0 ]; then
-#    usage
-#fi
-
-KVC=()
-for i in "${KV[@]}"; do
-        [[ "$i" != "-v" ]] && [[ $i != "--" ]] && KVC+=( "$i" );
-done
-
-if [ "$VERBOSE" = true ] ; then
-    RMO=vRf
-else
-    RMO=Rf
-fi
-
 
 function purge () {
     local VERSION=$1
@@ -132,11 +118,28 @@ function list() {
     printf '|\n'
 }
 
-if [ x${CMD} == x"clean" ]; then
-    clean_all
-elif [ x${CMD} == x"list" ]; then
+if [ x${CMD} == x"list" ]; then
     list
     exit 0
+fi
+
+if [ ${#KV[@]} -eq 0 ]; then
+    usage
+    exit 1
+fi
+
+KVC=()
+for i in "${KV[@]}"; do
+        [[ "$i" != "-v" ]] && [[ $i != "--" ]] && KVC+=( "$i" );
+done
+
+if [ "$VERBOSE" = true ] ; then
+    RMO=vRf
+else
+    RMO=Rf
+fi
+if [ x${CMD} == x"clean" ]; then
+    clean_all
 fi
 
 for i in "${KVC[@]}"
