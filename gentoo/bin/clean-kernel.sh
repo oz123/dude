@@ -97,7 +97,7 @@ function list() {
     if [ ${#images[*]}  -gt $rows ]; then rows=${#modules[*]}; fi
     if [ ${#sources[*]} -gt $rows ]; then rows=${#modules[*]}; fi
 
-    printf "%-20s| Sysmap | Config | Image | Modules | Sources |\n" Kernel
+    printf "%-30s| Sysmap | Config | Image | Modules | Sources |\n" Kernel
     for i in $(seq 0 $(( $rows - 1))); do
         has_sysmap="-"
         has_config="-"
@@ -110,11 +110,11 @@ function list() {
         if [[ "${modules[*]}" =~ ${modules[$i]} ]]; then has_modules="+" ; fi
         if [[ "${sources[*]}" =~ ${modules[$i]} ]]; then has_source="+" ; fi
 
-        printf '%0.1s' "-"{1..66}
+        printf '%0.1s' "-"{1..76}
         printf '|\n'
-        printf "%-20s|   %s    |   %s    |   %s   |    ${has_modules}   |     ${has_source}    | \n" ${modules[$i]} $has_sysmap $has_config $has_image
+        printf "%-30s|   %s    |   %s    |   %s   |    ${has_modules}   |     ${has_source}    | \n" ${modules[$i]} $has_sysmap $has_config $has_image
     done
-    printf '%0.1s' "-"{1..66}
+    printf '%0.1s' "-"{1..76}
     printf '|\n'
 }
 
