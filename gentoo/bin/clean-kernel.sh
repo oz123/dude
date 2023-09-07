@@ -6,7 +6,7 @@ set -e
 
 # Option strings
 function usage(){
-    echo >&2 "usage: $0 [-v] [-k version ] [-c|--clean] -k <version>..."
+    echo >&2 "usage: $0 [-v] [-l] [-c|--clean] [-p|--purge] [-g|--grub] -k <version>..."
     echo >&2 ""
     echo >&2 "OPTIONS:"
     echo >&2 "-c | --clean    execute make clean in each kernel sources directory"
@@ -17,7 +17,7 @@ function usage(){
     exit 1 ;
 }
 
-SHORT="vhclk:p"
+SHORT="vhclk:pg"
 LONG="verbose,help,clean,list,kernel:"
 
 OPTS=$(getopt -o "${SHORT}" --long "${LONG}" -n "$0" -- "$@" 2>/dev/null || usage)
@@ -32,14 +32,14 @@ declare -a KV
 while true; do
   case "$1" in
     -v|--verbose )    VERBOSE=true ; shift ;;
-    -h|--help    )    usage        ; shift ;;
     -p|--purge   )    CMD="purge"  ; shift ;;
     -l|--list    )    CMD="list"   ; shift ;;
     -c|--clean   )    CMD="clean"  ; shift ;;
-    -g|--grub    )    CMD="clean"  ; shift ;;
+    -g|--grub    )    CMD="grub"  ; shift ;;
     -k|--kernel  )
        KV+=("${@:2}") ; shift; shift ;;
     --) shift; break ;;
+    -h|--help) usage ;;
     *) usage ;;
   esac
 done
@@ -138,9 +138,10 @@ if [ "$VERBOSE" = true ] ; then
 else
     RMO=Rf
 fi
-if [ x${CMD} == x"clean" ]; then
+if [ ${CMD} == "clean" ]; then
     clean_all
 fi
+
 
 for i in "${KVC[@]}"
 do
@@ -148,4 +149,7 @@ do
    purge "$i"
 done
 
+if [ ${CMD} == "grub" ]; then
+    update_grub
+fi
 # vim: set softtabstop=4 tabstop=4 expandtab shiftwidth=4:
