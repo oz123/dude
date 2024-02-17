@@ -1,0 +1,78 @@
+#!/sbin/openrc-run
+# Copyright 2023 Oz Tiram
+# Distributed under the terms of the GNU General Public License v2
+
+name="bcachefs-mount"
+description="Mounts the Bcachefs file system"
+
+SECRET=/etc/bcachefs-mount/secret
+FILE_SYSTEMS=/etc/bcachefs-mount/fstab
+
+start() {
+
+    if [ ! -r "${FILE_SYSTEMS}" ]; then
+        ebegin "configuration file not found."
+        eend 1
+    fi
+
+    # read each line from the file
+    while ifs= read -r line; do
+        # skip lines starting with '#'
+        case "$line" in
+            \#*) continue ;;
+        esac
+
+        # set the ifs to a space
+        ifs=' '
+
+        # read the line into positional parameters
+        set -- $line
+
+        # assign the first part to group and the second part to mount
+        group="$1"
+        mp="$2"
+
+        ebegin "Mounting group: ${group} at ${mp}"
+        # optionally, restore the original ifs value
+        unset ifs
+
+        start-stop-daemon --start --exec /bin/mount -- -t bcachefs "${group}" "${mp}"
+        if [ $? -ne 0 ]; then
+           eend $?
+        fi
+
+    done < "${FILE_SYSTEMS}"
+    eend 0
+}
+
+stop() {
+    ebegin "Unmounting the Bcachefs file system"
+
+    if [ ! -r "${FILE_SYSTEMS}" ]; then
+        ebegin "configuration file not found."
+        eend 1
+    fi
+
+    # read each line from the file
+    while ifs= read -r line; do
+        # skip lines starting with '#'
+        case "$line" in
+            \#*) continue ;;
+        esac
+
+        # set the ifs to a space
+        ifs=' '
+
+        # read the line into positional parameters
+        set -- $line
+
+        # assign the first part to group and the second part to mount
+        mp="$2"
+
+        start-stop-daemon --start --exec /bin/umount -- "${mp}"
+        if [ $? -ne 0 ]; then
+           eend $?
+        fi
+    done < "${FILE_SYSTEMS}"
+    eend 0
+}
